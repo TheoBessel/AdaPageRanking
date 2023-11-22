@@ -9,8 +9,11 @@ Pour compiler le projet, veuiller exécuter le script `./build.sh`.
 
 En ajoutant l'argument `-run` à ce script, ce dernier exécute directement le code compilé.
 
+En ajoputant `-test` à ce script, ce dernier exécute les modules de test des différents paquets.
 
 # Architecture du projet
+
+Pour chaque paquet, on trouvera un module de test sous la forme `test_<nom_paquet>.adb`.
 
 ## 1. Paquet `Graph`
 
@@ -20,7 +23,7 @@ Ce paquet donne une implémentation des graphes orientés utilisés pour le page
 
 Ce paquet donne une implémentation des matrices utilisées pour le page ranking. Il est basé sur l'utilisation du type primitif `Array` du langage Ada. On utilise un seul `Array` afin d'assurer la contigüité en mémoire des données qui y sont stockées.
 
-## 3. Paquet `I/O Stream`
+## 3. Paquet `IOStream`
 
 Ce paquet fournit les différentes fonctions permettant de gérer les paramètres d'entrée du programme ainsi que l'affichage des différentes sorties.
 
