@@ -20,7 +20,7 @@ package body Algorithm is
 
         procedure print_float(val : Float) is
         begin
-            Put(val,2); Put(" ");
+            Put(val,Exp => 0); Put(" ");
         end;
 
         procedure newline is
