@@ -1,19 +1,50 @@
 R0: calculer la matrice G avec l'approche matrice pleine
 
 R1 : Comment "calculer la matrice G avec l'approche matrice pleine"
- - N est la taille de la matrice
- - Obtenir la matrice G
+ -  traiter les arguments de la ligne de commande et initialiser les constantes
+ -  Obtenir la matrice G
+
+R2 : Comment "traiter les arguments de la ligne de commande et initialiser les constantes"
+    Si Argument_CountSi = 0 Faire
+        - Afficher usage
+    Sinon
+        - traiter chaque les options donnés et initialisée les constantes
+    Fin Si
+
+R3 : Comment "Afficher usage"
+ -  Afficher ("Usage : " & command_Name & " [option] reseau")
+ -  Afficher une nouvelle ligne
+ -  Afficher ("    reseau : Le réseau de page étudié")
+ -  Afficher ("options : ")
+ -  Afficher les options
+
+R4 : Comment "Afficher les options"
+ -  Afficher (" -A <valeur> : Définir une valeur de alpha. La valeur doit être un nombre réel compris entre 0 et 1 inclus. La Valeur par défaut est 0.85")
+ -  Afficher (" -K <valeur> : Définir l'indice k du vecteur poids à calculer, pi_k, grâce à l'algorithme PageRank. La valeur doit être un entier positif. Sa valeur par défaut est 150")
+ -  Afficher (" -E <valeur> : Définir une précision (un epsilon) qui permettra d'interrompre le calcul PageRank si le vecteur poids est à une distance de vecteurs poids précédent strictement inférieure à epsilon. La valeur par défaut est 0.0 (désactiver)")
+ -  Afficher (" -P          : Choisir l'algorithme avec des matrices pleines")
+ -  Afficher (" -C          : Choisir l'algorithme avec des matrices creuses. C'est l'algorithme choisie par défaut")
+ -  Afficher (" -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
+
+R3 : Comment "traiter les options donnés et initialisée les constantes"
+    Pour i allant de 1 à Argument_Count Faire
+        - traiter l'option
+    Fin Pour
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+R4 : Comment "Traiter l'option"
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 R2 : Comment "Obtenir la matrice G"
- - transformer la matrice S en la matrice G
+ -  transformer la matrice S en la matrice G
 
 R3 : Comment "transformer la matrice S en la matrice G"
- - Obtenir la matrice S
- - appliquer la deuxième transformation de Brin et Page
+ -  Obtenir la matrice S
+ -  appliquer la deuxième transformation de Brin et Page
 
 R4 : Comment "Obtenir la matrice S"
- - Obtenir la matrice H
- - transformer la matrice H en la matrice S
+ -  Obtenir la matrice H
+ -  transformer la matrice H en la matrice S
 
 R5 : Comment "Obtenir la matrice H"
  -  Initialiser H
