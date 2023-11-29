@@ -6,20 +6,20 @@ package Matrix is
     type T_Matrix(V_Width : Positive; V_Height : Positive; V_Size : Positive) is tagged private;
     type T_InitializerList is array(Positive range <>, Positive range <>) of T_Value;
 
-    -- Initialise une matrice en la remplissant de 0.
+    -- Initialise une matrice en la remplissant de `val`
     function init(height: in Positive; width : in Positive; val : in T_Value) return T_Matrix;
 
-    -- Initialise une matrice avec un tableau.
+    -- Initialise une matrice avec un tableau
     function init(arr : in T_InitializerList) return T_Matrix;
 
-    -- Accède à la valeur associée aux indices `i` et `j` dans une matrice.
+    -- Accède à la valeur associée aux indices `i` et `j` dans une matrice
     function get(mat : in T_Matrix; i : in Positive; j : in Positive) return T_Value with
         Pre => (i in 1..mat.V_Height) and (j in 1..mat.V_Width);
     
-    -- Modifie la valeur associée aux indices `i` et `j` dans une matrice.
+    -- Modifie la valeur associée aux indices `i` et `j` dans une matrice
     procedure set(mat : out T_Matrix; i : in Positive; j : in Positive; val : in T_Value) with
-        Pre => (i in 1..mat.V_Height) and (j in 1..mat.V_Width);--,
-        --Post => get(mat,i,j) = val;
+        Pre => (i in 1..mat.V_Height) and (j in 1..mat.V_Width),
+        Post => get(mat,i,j) = val;
 
     -- Applique un traitement à tous les éléments d'une matrice
     generic
@@ -27,7 +27,7 @@ package Matrix is
         with procedure breakline;
     procedure forall(mat : out T_Matrix);
 
-    -- Multiplie deux matrices entre elles
+    -- Multiplie deux matrices
     function "*"(left : in T_Matrix; right : in T_Matrix) return T_Matrix with
         Pre => left.V_Width = right.V_Height,
         Post => "*"'Result.V_Height = left.V_Height and "*"'Result.V_Width = right.V_Width;
