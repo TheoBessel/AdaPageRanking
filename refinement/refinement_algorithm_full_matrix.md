@@ -132,11 +132,16 @@ R7 : Comment "remplir les lignes de H"
 
 
 R8 : Comment "remplir les colonnes de H"
+    - determiner s'il existe au moins un lien sortant de la page Pi vers la page Pj
     Si existe au moins un lien sortant de la page Pi vers la page Pj Faire
         H(i*N + j) := 1 / |Pi|
     sinon Faire
         H(i*N + j) := 0
     Fin Si
+
+R9 : Comment "détermniner s'il existe au moins un lien sortant de la page Pi vers la page Pj"
+ -  S'il existe une arete entre Pi et Pj dans la le graphe
+
 
 R5 : Comment "transformer la matrice H en la matrice S"
  -  remplacer toutes les lignes vides pour que la somme vaut 1
