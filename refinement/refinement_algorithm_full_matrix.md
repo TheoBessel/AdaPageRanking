@@ -27,13 +27,85 @@ R4 : Comment "Afficher les options"
  -  Afficher (" -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
 
 R3 : Comment "traiter les options donnés et initialisée les constantes"
+ -  Initialiser les obligation d'initialisation
     Pour i allant de 1 à Argument_Count Faire
         - traiter l'option
     Fin Pour
+ -  Initialiser les constantes non initialisée
 
-%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+R4 : Comment "Initialiser les obligation d'initialisation"
+ -  Alpha_Non_Initialise := True
+ -  K_Non_Initialise := True
+ -  Epsilon_Non_Initialise := True
+ -  Creuse_Non_Initialise := True
+ -  prefixe_Non_Initialise := True
+
 R4 : Comment "Traiter l'option"
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    Selon Argument(i)
+        dans "-A" => modifier la valeur de alpha
+        dans "-K" => modifier la valeur de K
+        dans "-E" => modifier la valeur de epsilon
+        dans "-P" => Creuse := False
+        dans "-C" => Creuse := True
+        dans "-R" => modiifer le prefixe des fichiers résultats
+        dans autres => rien
+    FinSelon
+
+R5 : Comment "modifier la valeur de alpha"
+    Commencer
+        Alpha := argument(i + 1)
+    Exception
+        dans autres => Afficher usage; Quitter
+    Fin
+
+
+R5 : Comment "modifier la valeur de K"
+    Commencer
+        K := argument(i + 1)
+    Exception
+        dans autres => Afficher usage; Quitter
+    Fin
+
+R5 : Comment "modifier la valeur de epsilon"
+    Commencer
+        epsilon := argument(i + 1)
+    Exception
+        dans autres => Afficher usage; Quitter
+    Fin
+
+R4 : Comment "initialiser les constantes non initialisée"
+ -  initialiser alpha
+ -  initialiser k
+ -  initialiser epsilon
+ -  initialiser prefixe
+
+R5 : Comment "initialiser alpha"
+    Si Alpha_Non_Initialise Faire
+        Alpha := 0.85;
+    Sinon
+        rien;
+    FinSi
+
+R5 : Comment "initialiser k"
+    Si K_Non_Initialise Faire
+        K := 150;
+    Sinon
+        rien;
+    FinSi
+
+R5 : Comment "initialiser epsilon"
+    Si Epsilon_Non_Initialise Faire
+        Epsilon := 0.0;
+    Sinon
+        rien;
+    FinSi
+
+R5 : Comment "initialiser prefixe"
+    Si Alpha_Non_Initialise Faire
+        prefixe := "output";
+    Sinon
+        rien;
+    FinSi
 
 R2 : Comment "Obtenir la matrice G"
  -  transformer la matrice S en la matrice G
@@ -61,9 +133,9 @@ R7 : Comment "remplir les lignes de H"
 
 R8 : Comment "remplir les colonnes de H"
     Si existe au moins un lien sortant de la page Pi vers la page Pj Faire
-        H(i*N + j) = 1 / |Pi|
+        H(i*N + j) := 1 / |Pi|
     sinon Faire
-        H(i*N + j) = 0
+        H(i*N + j) := 0
     Fin Si
 
 R5 : Comment "transformer la matrice H en la matrice S"
@@ -95,7 +167,7 @@ R9 : Comment "remplir si vide est Vrai"
 
 R10 : Comment "remplir pour chaque colonne par 1/N"
     Pour j allant de 1 à N Faire
-        H(i * N + j) = 1 / N;
+        H(i * N + j) := 1 / N;
     Fin Pour
 
 R4 : appliquer la deuxième transformation de Brin et Page
