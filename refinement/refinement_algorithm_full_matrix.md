@@ -1,8 +1,20 @@
-R0: calculer la matrice G avec l'approche matrice pleine
+R0 : calculer pi_k
 
-R1 : Comment "calculer la matrice G avec l'approche matrice pleine"
+R1 : comment "calculer pi_k"
  -  traiter les arguments de la ligne de commande et initialiser les constantes
- -  Obtenir la matrice G
+ -  Si creuse Faire
+        - calculer pi_k par les matrices creuse
+    Sinon Faire
+        - calculer pi_k par les matrices pleines
+    Fin Si
+
+R2 : Comment "calculer pi_k par les matrices pleines"
+        - calculer la matrice G avec l'approche matrice pleine
+        - i := 0
+        TantQue pi_k < epsilon and i <= k
+                - multiplier G par la matrice pi_0
+                - i := i + 1;
+        Fin TantQue
 
 R2 : Comment "traiter les arguments de la ligne de commande et initialiser les constantes"
     Si Argument_CountSi = 0 Faire
@@ -107,7 +119,7 @@ R5 : Comment "initialiser prefixe"
         rien;
     FinSi
 
-R2 : Comment "Obtenir la matrice G"
+R2 : Comment "calculer la matrice G par l'approche des matrices pleines"
  -  transformer la matrice S en la matrice G
 
 R3 : Comment "transformer la matrice S en la matrice G"
