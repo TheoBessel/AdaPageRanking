@@ -7,17 +7,11 @@ R1 : comment "calculer pi_k"
     Sinon Faire
         - calculer pi_k par les matrices pleines
     Fin Si
+    écrire le résultat dans prefixe.pr et prefixe.prw
 
-R2 : Comment "calculer pi_k par les matrices pleines"
-        - calculer la matrice G avec l'approche matrice pleine
-        - i := 0
-        TantQue pi_k < epsilon and i <= k
-                - multiplier G par la matrice pi_0
-                - i := i + 1;
-        Fin TantQue
 
 R2 : Comment "traiter les arguments de la ligne de commande et initialiser les constantes"
-    Si Argument_CountSi = 0 Faire
+    Si Argument_Count = 0 Faire
         - Afficher usage
     Sinon
         - traiter chaque les options donnés et initialisée les constantes
@@ -31,12 +25,12 @@ R3 : Comment "Afficher usage"
  -  Afficher les options
 
 R4 : Comment "Afficher les options"
- -  Afficher (" -A <valeur> : Définir une valeur de alpha. La valeur doit être un nombre réel compris entre 0 et 1 inclus. La Valeur par défaut est 0.85")
- -  Afficher (" -K <valeur> : Définir l'indice k du vecteur poids à calculer, pi_k, grâce à l'algorithme PageRank. La valeur doit être un entier positif. Sa valeur par défaut est 150")
- -  Afficher (" -E <valeur> : Définir une précision (un epsilon) qui permettra d'interrompre le calcul PageRank si le vecteur poids est à une distance de vecteurs poids précédent strictement inférieure à epsilon. La valeur par défaut est 0.0 (désactiver)")
- -  Afficher (" -P          : Choisir l'algorithme avec des matrices pleines")
- -  Afficher (" -C          : Choisir l'algorithme avec des matrices creuses. C'est l'algorithme choisie par défaut")
- -  Afficher (" -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
+ -  Afficher ("     -A <valeur> : Définir une valeur de alpha. La valeur doit être un nombre réel compris entre 0 et 1 inclus. La Valeur par défaut est 0.85")
+ -  Afficher ("     -K <valeur> : Définir l'indice k du vecteur poids à calculer, pi_k, grâce à l'algorithme PageRank. La valeur doit être un entier positif. Sa valeur par défaut est 150")
+ -  Afficher ("     -E <valeur> : Définir une précision (un epsilon) qui permettra d'interrompre le calcul PageRank si le vecteur poids est à une distance de vecteurs poids précédent strictement inférieure à epsilon. La valeur par défaut est 0.0 (désactiver)")
+ -  Afficher ("     -P          : Choisir l'algorithme avec des matrices pleines")
+ -  Afficher ("     -C          : Choisir l'algorithme avec des matrices creuses. C'est l'algorithme choisie par défaut")
+ -  Afficher ("     -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
 
 R3 : Comment "traiter les options donnés et initialisée les constantes"
  -  Initialiser les obligation d'initialisation
@@ -60,6 +54,7 @@ R4 : Comment "Traiter l'option"
         dans "-P" => Creuse := False
         dans "-C" => Creuse := True
         dans "-R" => modiifer le prefixe des fichiers résultats
+        dans "*.net" => fichier := Argument(i)
         dans autres => rien
     FinSelon
 
@@ -90,6 +85,8 @@ R4 : Comment "initialiser les constantes non initialisée"
  -  initialiser k
  -  initialiser epsilon
  -  initialiser prefixe
+ -  initialiser N
+ -  initialiser les constantes indépendantes des paramètres
 
 R5 : Comment "initialiser alpha"
     Si Alpha_Non_Initialise Faire
@@ -119,6 +116,23 @@ R5 : Comment "initialiser prefixe"
         rien;
     FinSi
 
+R5 : Comment "initialiser N"
+    N := ligne 1 de fichier mis en entier
+
+R5 : Comment "initialiser les constantes indépendantes des paramètres"
+ -  Initialiser e comme un vecteur de N colonnes rempli avec 1
+ -  Initialiser pi_0 comme un vecteur de N colonnes rempli avec 1/N
+
+
+
+R2 : Comment "calculer pi_k par les matrices pleines"
+        - calculer la matrice G avec l'approche matrice pleine
+        - i := 0
+        TantQue pi_k < epsilon and i <= k
+                - multiplier G par la matrice pi_0
+                - i := i + 1;
+        Fin TantQue
+
 R2 : Comment "calculer la matrice G par l'approche des matrices pleines"
  -  transformer la matrice S en la matrice G
 
@@ -134,7 +148,7 @@ R5 : Comment "Obtenir la matrice H"
  -  Initialiser H
  -  remplir H
  
-R6 : Comment remplir H
+R6 : Comment "remplir H"
  -  remplir les lignes de H
 
 R7 : Comment "remplir les lignes de H"
@@ -187,8 +201,10 @@ R10 : Comment "remplir pour chaque colonne par 1/N"
         H(i * N + j) := 1 / N;
     Fin Pour
 
-R4 : appliquer la deuxième transformation de Brin et Page
+R4 : Comment "appliquer la deuxième transformation de Brin et Page"
  -  multiplier la matrice S par le scalaire alpha
  -  multiplier la matrice e par la matrice eT (eT = e transpose)
  -  multiplier la matrice e x eT par le scalaire (1 - alpha) / N 
  -  sommer la matrice alpha.S et la matrice (1 - alpha) / N x eeT
+
+R2 : Comment "calculer pi_k par les matrices creuses"
