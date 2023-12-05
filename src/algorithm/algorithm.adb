@@ -32,12 +32,12 @@ package body Algorithm is
 
         procedure print_float is new Float_Matrix.forall(process => print_float, breakline => newline);
 
-        adj : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6, V_Size => 36);
-        H : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6, V_Size => 36);
-        S : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6, V_Size => 36);
-        G : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6, V_Size => 36);
+        adj : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
+        H : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
+        S : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
+        G : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
 
-        e : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 1, V_Size => 6);
+        e : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 1);
         
         sum : Float;
 

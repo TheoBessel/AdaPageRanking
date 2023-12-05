@@ -11,7 +11,7 @@ procedure TestMatrix is
     n : constant Positive := 3;
     m : constant Positive := 4;
 
-    mat : T_Matrix(V_Height => n, V_Width => m, V_Size => n*m);
+    mat : T_Matrix(V_Height => n, V_Width => m);
 
     procedure print(val : Integer) is
     begin
@@ -25,10 +25,10 @@ procedure TestMatrix is
 
     procedure print is new forall(process => print, breakline => newline);
 
-    A : T_Matrix(V_Height => 3, V_Width => 2, V_Size => 6);
-    B : T_Matrix(V_Height => 2, V_Width => 4, V_Size => 8);
-    C : T_Matrix(V_Height => 3, V_Width => 4, V_Size => 12);
-    D : T_Matrix(V_Height => 4, V_Width => 3, V_Size => 12);
+    A : T_Matrix(V_Height => 3, V_Width => 2);
+    B : T_Matrix(V_Height => 2, V_Width => 4);
+    C : T_Matrix(V_Height => 3, V_Width => 4);
+    D : T_Matrix(V_Height => 4, V_Width => 3);
 begin
     Put_Line("Testing `Matrix` Package ...");
 
