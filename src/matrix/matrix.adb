@@ -58,7 +58,7 @@ package body Matrix is
     begin
         for i in 1..mat.V_Height loop
             for j in 1..mat.V_Width loop
-                mat.V_Matrix(i,j) := left.V_Matrix(i,j)+right.V_Matrix(i,j);
+                set(mat,i,j,get(left,i,j)+get(right,i,j));
             end loop;
         end loop;
         return mat;
@@ -69,7 +69,7 @@ package body Matrix is
     begin
         for i in 1..mat.V_Height loop
             for j in 1..mat.V_Width loop
-                mat.V_Matrix(i,j) := right*left.V_Matrix(i,j);
+                set(mat,i,j,right*get(left,i,j));
             end loop;
         end loop;
         return mat;
@@ -80,7 +80,7 @@ package body Matrix is
     begin
         for i in 1..mat.V_Height loop
             for j in 1..mat.V_Width loop
-                mat.V_Matrix(i,j) := left*right.V_Matrix(i,j);
+                set(mat,i,j,left*get(right,i,j));
             end loop;
         end loop;
         return mat;
