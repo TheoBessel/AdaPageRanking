@@ -3,7 +3,7 @@ generic
     with function "+" (left : T_Value; right : T_Value) return T_Value is <>;
     with function "*" (left : T_Value; right : T_Value) return T_Value is <>;
 package Matrix is
-    type T_Matrix(V_Width : Positive; V_Height : Positive; V_Size : Positive) is tagged private;
+    type T_Matrix(V_Width : Positive; V_Height : Positive) is tagged private;
     type T_InitializerList is array(Positive range <>, Positive range <>) of T_Value;
 
     -- Initialise une matrice en la remplissant de `val`
@@ -49,9 +49,9 @@ package Matrix is
     function T(mat : in T_Matrix) return T_Matrix with
         Post => T'Result.V_Height = mat.V_Width and T'Result.V_Width = mat.V_Height;
 private
-    type T_Matrix_Content is array(Positive range <>) of T_Value;
+    type T_Matrix_Content is array(Positive range <>,Positive range <>) of T_Value;
 
-    type T_Matrix(V_Width : Positive; V_Height : Positive; V_Size : Positive) is tagged record
-        V_Matrix : T_Matrix_Content(1..V_Size);
+    type T_Matrix(V_Width : Positive; V_Height : Positive) is tagged record
+        V_Matrix : T_Matrix_Content(1..V_Width,1..V_Height);
     end record;
 end Matrix;
