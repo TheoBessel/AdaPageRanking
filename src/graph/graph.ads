@@ -13,6 +13,17 @@ package graph is
         new Matrix(Integer, "+", "*");
     use Matrix;
     
+    -- Initialiser
+    -- Initialise un graphe a N noeuds
+    -- Paramètres :
+    --      - Graphe       [out]        Le graphe à initialiser
+    --      - N            [in]         Le nombre de noeuds du graphe
+    -- Pre:
+    --      - Aucune
+    -- Post:
+    --      - Aucune
+    procedure Initialiser (Graphe : T_Graphe; N : Natural);
+
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence
     -- Paramètres :
@@ -52,7 +63,7 @@ package graph is
     --      - Aucune
     -- post : 
     --      - Aucune
-    function Posseder_Arete (Network: in T_Graphe; Depart : in Natural; Arrivee : in Natural) return Boolean;
+    function Posseder_Arete (Network: in T_Graphe; Positive : in Natural; Arrivee : in Positive) return Boolean;
 
     -- Creer_Arete
     -- Creer une arete du sommet Depart au sommet Arrivee dans le graphe Network
@@ -64,7 +75,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    procedure Creer_Arete (Network : in out T_Graphe; Depart : in Natural; Arrivee : in Natural);
+    procedure Creer_Arete (Network : in out T_Graphe; Depart : in Positive; Arrivee : in Positive);
 
     -- Supprimer_Arete
     -- Supprime une arete du graphe du sommet Depart au sommet Arrivee
@@ -76,7 +87,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    procedure Supprimer_Arete (Network : in out T_Graphe; Depart : in Natural; Arrivee : in Natural);
+    procedure Supprimer_Arete (Network : in out T_Graphe; Depart : in Positive; Arrivee : in Positive);
 
     -- Copier_Graphe
     -- Copie le graphe Network dans le graphe New_Network
