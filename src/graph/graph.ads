@@ -42,7 +42,7 @@ package graph is
     --               | 1 1 0 0 0 |
     --               | 1 0 0 0 1 |
     --               ⌊ 0 0 0 1 0 ⌋
-    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe) return T_Graphe;
+    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
 
     -- Enregistrer
     -- Enregistrer un graphe dans un fichier File_Name à partir d'un graphe
