@@ -122,39 +122,30 @@ package body graph is
 
     function Arite_Sortante (Network : in T_Graphe) return Natural is
         Max : in out Natural;      -- Max des degrés sortant des sommets visités
-        Sum : in out Natural;      -- Nombre d'arete sortante du sommet i
+        Deg : in out Natural;      -- Nombre d'arete sortante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
-            Sum := 0;
-            for j in 1..(Network.Nombre_Noeuds) loop
-                if Posseder_Arete(Network => Network, Depart => i, Arrivee => j) then
-                    Sum := Sum + 1;
-                end if;
-            end loop;
+            Deg := Degre_Entrant(Network, i)
 
-            if Max < Sum then
-                Max := Sum;
+            if Max < Deg then
+                Max := Deg;
             else
                 null;
             end if;
             
         end loop;
     end Arite_Sortante;
+    
 
     function Arite_Entrante (Network : in T_Graphe) return Natural is
         Max : in out Natural;      -- Max des degrés entrants des sommets visités
-        Sum : in out Natural;      -- Nombre d'arete entrante du sommet i
+        Deg : in out Natural;      -- Nombre d'arete entrante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
-            Sum := 0;
-            for j in 1..(Network.Nombre_Noeuds) loop
-                if Posseder_Arete(Network => Network, Depart => j, Arrivee => i) then
-                    Sum := Sum + 1;
-                end if;
-            end loop;
+            Deg := Degre_Entrant(Network, i);
 
-            if Max < Sum then
-                Max := Sum;
+            if Max < Deg then
+                Max := Deg;
             else
                 null;
             end if;
@@ -175,6 +166,19 @@ package body graph is
         end loop;
         return Sum;
     end Degre_Entrant;
+
+    function Degre_Sortant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
+        Sum : in out Natural := 0;
+    begin
+        for i in 1..(Network.Nombre_Noeuds) loop
+            if Posseder_Arete(Network => Network, Depart => Sommet, Arrivee => i) then
+                Sum := Sum + 1;
+            else
+                null;
+            end if;
+        end loop;
+        return Sum;
+    end Degre_Sortant;
 
 
     function Nombre_Noeuds (Network : in T_Graphe) return Natural is
