@@ -1,7 +1,7 @@
 -- module qui lit un nom de fichier qui représentent un graphe par arrete
 -- et stocke un type graphe
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Matrix;
+with Matrix;                use Matrix;
 
 package graph is
 
@@ -63,7 +63,7 @@ package graph is
     --      - Aucune
     -- post : 
     --      - Aucune
-    function Posseder_Arete (Network: in T_Graphe; Positive : in Natural; Arrivee : in Positive) return Boolean;
+    function Posseder_Arete (Network: in T_Graphe; Depart : in Positive; Arrivee : in Positive) return Boolean;
 
     -- Creer_Arete
     -- Creer une arete du sommet Depart au sommet Arrivee dans le graphe Network
@@ -130,7 +130,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Degre_Entrant (Network : in T_Graphe; Sommet : Positive) return Natural;
+    function Degre_Sortant (Network : in T_Graphe; Sommet : Positive) return Natural;
 
     -- Nombre_Sommet
     -- Renvoie le nombre de sommets du graphe
@@ -150,7 +150,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Nombre_Sommet (Network : T_Graphe) return T_Matrix;
+    function Obtenir_Matrice (Network : T_Graphe) return T_Matrix;
 
     -- Afficher
     -- Afficher la matrice d'adjacence du graphe
@@ -165,7 +165,7 @@ package graph is
 private
     type T_Graphe is record
         Nombre_Noeuds : Natural;
-        Mat : T_Matrix(Nombre_Noeuds, Nombre_Noeuds);
+        Mat : T_Matrix;
     end record;
 
 end graph;
