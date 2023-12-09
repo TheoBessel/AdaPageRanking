@@ -1,8 +1,6 @@
 -- module qui lit un nom de fichier qui représentent un graphe par arrete
 -- et stocke un type graphe
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada.Text_IO;           use Ada.Text_IO;
-with Ada.Integer_Text_IO;   use Ada.Integer_Text_IO;
 with Matrix;
 
 package graph is
@@ -108,18 +106,7 @@ package graph is
     --      - Network       [in]        Le graphe dont on va déterminer le degré maximal sortant
     -- Pre:
     --      - Aucune
-    -- Post:
-    --      - Aucune
-    function Arite_Sortante(Network : in T_Graphe) return Natural;
-
-    -- Arite_Entrante
-    -- Donner le dégré maximal entrant du graphe
-    -- Paramètres:
-    --      - Network       [in]        Le graphe dont on va déterminer le degré maximal entrant
-    -- Pre:
-    --      - Aucune
-    -- Post:
-    --      - Aucune
+    -- Post:Naturalne
     function Arite_Entrante(Network : in T_Graphe) return Natural;
 
     -- Degre_Entrant
@@ -154,6 +141,26 @@ package graph is
     -- Post:
     --      - Aucune
     function Nombre_Sommet (Network : T_Graphe) return Natural;
+
+    -- Obtenir_Matrice
+    -- Renvoie la matrice du graphe
+    -- Paramètres:
+    --      - Network       [in]        Le graphe dont on va renvoyer le nombre de sommet
+    -- Pre:
+    --      - Aucune
+    -- Post:
+    --      - Aucune
+    function Nombre_Sommet (Network : T_Graphe) return T_Matrix;
+
+    -- Afficher
+    -- Afficher la matrice d'adjacence du graphe
+    -- Paramètres :
+    --      - Network       [in]        Le graphe à afficher
+    -- Pre :
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    procedure Afficher(Network : T_Graphe);
 
 private
     type T_Graphe is record

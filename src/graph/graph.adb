@@ -1,4 +1,6 @@
 -- Implémantation du package graphe
+with Ada.Text_IO;           use Ada.Text_IO;
+with Ada.Integer_Text_IO;   use Ada.Integer_Text_IO;
 
 package body graph is
 
@@ -83,6 +85,7 @@ package body graph is
         return (get(mat => Network.Mat, i => Depart, j => Arrivee) == 1);
     end Posseder_Arete;
 
+
     procedure Creer_Arete (Network : in out T_Graphe; Depart : in Positive; Arrivee : in Positive) is    
     begin
         set
@@ -166,6 +169,7 @@ package body graph is
         return Sum;
     end Degre_Entrant;
 
+
     function Degre_Sortant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
         Sum : in out Natural := 0;
     begin
@@ -184,5 +188,26 @@ package body graph is
     begin
         return Network.Nombre_Noeuds;
     end Nombre_Noeuds;
+
+
+    function Nombre_Noeuds (Network : in T_Graphe) return T_Matrix is
+    begin
+        return Network.Mat;
+    end Nombre_Noeuds;
+
+    procedure Afficher (Network : T_Graphe) is
+    begin
+        for I in 1..(Network.Nombre_Noeuds) loop
+            for J in 1..(Network.Nombre_Noeuds) loop
+                if Posseder_Arete(Network, i, j) then
+                    Put(1, 1);
+                else
+                    Put(0, 1);
+                end if;
+                Put(" ");
+            end loop;
+            Put("\n");
+        end loop;
+    end Afficher;
 
 end graph;

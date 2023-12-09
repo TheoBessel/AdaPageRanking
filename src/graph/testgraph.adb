@@ -27,8 +27,8 @@ procedure TestGraph is
 begin
     Put_Line("Testing `Graph` Package ...");
 
-    Lire_Graphe("testgraph.net", gra);
+    Lire_Graphe(file_name, gra);
     Put_line("Res : ");
-    print_int(gra);
+    print_int(Obtenir_Matrice(gra));
     New_Line;
 end TestGraph;
