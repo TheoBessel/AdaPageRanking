@@ -1,15 +1,19 @@
 -- module qui lit un nom de fichier qui représentent un graphe par arrete
 -- et stocke un type graphe
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Matrix;                use Matrix;
+with Matrix;
+
+generic
+    N : Natural;   -- le Nombre de Noeud du graphe
+
 
 package graph is
 
     type T_Graphe is limited private;
 
-    package Matrix is
+    package maMatrix is
         new Matrix(Integer, "+", "*");
-    use Matrix;
+    use maMatrix;
     
     -- Initialiser
     -- Initialise un graphe a N noeuds
@@ -20,7 +24,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    procedure Initialiser (Graphe : T_Graphe; N : Natural);
+    procedure Initialiser (Graphe : out T_Graphe; N : in Natural);
 
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence
@@ -165,7 +169,7 @@ package graph is
 private
     type T_Graphe is record
         Nombre_Noeuds : Natural;
-        Mat : T_Matrix;
+        Mat : T_Matrix(N, N);
     end record;
 
 end graph;

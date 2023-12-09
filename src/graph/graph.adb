@@ -11,19 +11,21 @@ package body graph is
     end Initialiser;
 
 
-    procedure lire_graphe(File_Name : in Unbounded_String; res : T_graphe) is
-        File : constant File_type;  -- Variable qui stocke le fichier du graphe 
-        N : constant Natural;       -- Nombre de noeuds du graphe
-        line : Unbounded_String;    -- ligne du fichier
-        Caractere : String;         -- chaine de caractère lu par le curseur
-        depart : Positive;          -- le numéro du node de départ
-        arrive : Positive;          -- le numéro du node d'arrivée
+    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_graphe) is
+        File : File_type;               -- Variable qui stocke le fichier du graphe 
+        N : Natural;                    -- Nombre de noeuds du graphe
+        line : Unbounded_String;        -- ligne du fichier
+        Caractere : Unbounded_String;   -- chaine de caractère lu par le curseur
+        depart : Positive;              -- le numéro du node de départ
+        arrive : Positive;              -- le numéro du node d'arrivée
     begin
         open(File, Name => To_string(File_Name), mode => In_File);
         -- lit le nombre de noeuds dans le fichier
         N := Integer'Value(Get_line(File));
         Skip_Line;
-        Initialiser(res, N);
+
+        Initialiser(Network, N);
+        
         loop
             line := To_Unbounded_String(Get_Line(File));
             Get(line, C);
@@ -37,13 +39,12 @@ package body graph is
             depart := Integer'Value(C);
             Get(line, C);
             arrive := Integer'Value(C);
-            Creer_Arete(res, depart, arrive, 1);
+            Creer_Arete(Network, depart, arrive, 1);
             Skip_Line(File);
             exit when End_of_file(File);
         end loop;
         close(File);
-        return res; 
-    end lire_graphe;
+    end Lire_Graphe;
 
 
     procedure Enregistrer (Graphe : in T_Graphe; File_Name : in Unbounded_String) is
@@ -82,7 +83,7 @@ package body graph is
 
     function Posseder_Arete (Network : in T_Graphe; Depart : in Positive; Arrivee : in Positive) return Boolean is
     begin
-        return (get(mat => Network.Mat, i => Depart, j => Arrivee) == 1);
+        return (get(mat => Network.Mat, i => Depart, j => Arrivee) = 1);
     end Posseder_Arete;
 
 
@@ -123,11 +124,11 @@ package body graph is
 
 
     function Arite_Sortante (Network : in T_Graphe) return Natural is
-        Max : in out Natural;      -- Max des degrés sortant des sommets visités
-        Deg : in out Natural;      -- Nombre d'arete sortante du sommet i
+        Max : Natural;      -- Max des degrés sortant des sommets visités
+        Deg : Natural;      -- Nombre d'arete sortante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
-            Deg := Degre_Entrant(Network, i)
+            Deg := Degre_Entrant(Network, i);
 
             if Max < Deg then
                 Max := Deg;
@@ -140,8 +141,8 @@ package body graph is
     
 
     function Arite_Entrante (Network : in T_Graphe) return Natural is
-        Max : in out Natural;      -- Max des degrés entrants des sommets visités
-        Deg : in out Natural;      -- Nombre d'arete entrante du sommet i
+        Max : Natural;      -- Max des degrés entrants des sommets visités
+        Deg : Natural;      -- Nombre d'arete entrante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
             Deg := Degre_Entrant(Network, i);
@@ -157,7 +158,7 @@ package body graph is
 
 
     function Degre_Entrant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
-        Sum : in out Natural := 0;
+        Sum : Natural := 0;
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
             if Posseder_Arete(Network => Network, Depart => Sommet, Arrivee => i) then
@@ -171,7 +172,7 @@ package body graph is
 
 
     function Degre_Sortant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
-        Sum : in out Natural := 0;
+        Sum : Natural := 0;
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
             if Posseder_Arete(Network => Network, Depart => Sommet, Arrivee => i) then
@@ -184,16 +185,16 @@ package body graph is
     end Degre_Sortant;
 
 
-    function Nombre_Noeuds (Network : in T_Graphe) return Natural is
+    function Nombre_Sommet (Network : in T_Graphe) return Natural is
     begin
         return Network.Nombre_Noeuds;
-    end Nombre_Noeuds;
+    end Nombre_Sommet;
 
 
-    function Nombre_Noeuds (Network : in T_Graphe) return T_Matrix is
+    function Obtenir_Matrice (Network : in T_Graphe) return T_Matrix is
     begin
         return Network.Mat;
-    end Nombre_Noeuds;
+    end Obtenir_Matrice;;
 
     procedure Afficher (Network : T_Graphe) is
     begin
