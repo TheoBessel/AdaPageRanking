@@ -9,10 +9,9 @@ package body graph is
     end Initialiser;
 
 
-    procedure lire_graphe(File_Name : in Unbounded_String) is
+    procedure lire_graphe(File_Name : in Unbounded_String; res : T_graphe) is
         File : constant File_type;  -- Variable qui stocke le fichier du graphe 
         N : constant Natural;       -- Nombre de noeuds du graphe
-        res : T_Graphe;             -- Matrice résultat du graphe
         line : Unbounded_String;    -- ligne du fichier
         Caractere : String;         -- chaine de caractère lu par le curseur
         depart : Positive;          -- le numéro du node de départ

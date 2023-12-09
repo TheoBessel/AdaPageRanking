@@ -1,8 +1,8 @@
 with Ada.Text_IO;               use Ada.Text_IO;
 with Ada.Integer_text_IO;       use Ada.Integer_text_IO;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
+with Graph;                     use Graph;
 with Matrix;
-with Graph;
 
 
 procedure TestGraph is
@@ -23,13 +23,11 @@ procedure TestGraph is
 
     procedure print_int is new Int_Matrix.forall(process => print_int, breakline => newline);
 
-    package mongraph is 
-        new graph(T_matrix, init, set);
-    gra : T_Matrix;
+    gra : T_Graphe;
 begin
     Put_Line("Testing `Graph` Package ...");
 
-    gra := lire_graphe(File_type);
+    Lire_Graphe("testgraph.net", gra);
     Put_line("Res : ");
     print_int(gra);
     New_Line;

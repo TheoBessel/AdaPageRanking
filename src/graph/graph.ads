@@ -27,20 +27,22 @@ package graph is
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence
     -- Paramètres :
-    --      - File_Name     [in]        Le nom du fichier dont le graphe doit être extrait 
+    --      - File_Name     [in]        Le nom du fichier dont le graphe doit être extrait
+    --      - Network       [out]       La variable qui stocke le graphe
     -- pre :
     --      - Aucune
     -- post :
     --      - Aucune
     -- Exemple :
-    --      File_Name := "Test.net"
-    --      Graphe := Lire_graphe(File_Name);
+    --      Graphe : T_Graphe;
+    --      File_Name : Unbounded_String := To_Unbounded_String("Test.net");
+    --      Lire_graphe(File_Name, Graphe);
     --      Graphe = ⌈ 0 1 1 1 0 ⌉
     --               | 1 0 1 0 0 |
     --               | 1 1 0 0 0 |
     --               | 1 0 0 0 1 |
     --               ⌊ 0 0 0 1 0 ⌋
-    function Lire_Graphe(File_Name : in Unbounded_String) return T_Graphe;
+    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe) return T_Graphe;
 
     -- Enregistrer
     -- Enregistrer un graphe dans un fichier File_Name à partir d'un graphe
