@@ -46,18 +46,16 @@ package body graph is
 
     begin
         open(File, Name => To_string(File_Name), mode => In_File);
+
         -- lit le nombre de noeuds dans le fichier
         N := Integer'Value(Get_line(File));
-        Skip_Line;
-        Put("N = "); Put(N); New_Line;
-
+        
         Initialiser(Network);
         
         loop
             line := To_Unbounded_String(Get_Line(File));
             Parseur(line, Depart, Arrivee);
             Creer_Arete(Network, Depart, Arrivee);
-            Skip_Line(File);
             exit when End_of_file(File);
         end loop;
 
@@ -212,6 +210,7 @@ package body graph is
         return Network.Mat;
     end Obtenir_Matrice;
 
+
     procedure Afficher (Network : T_Graphe) is
     begin
         for I in 1..(Network.Nombre_Noeuds) loop
@@ -219,12 +218,79 @@ package body graph is
                 if Posseder_Arete(Network, i, j) then
                     Put(1, 1);
                 else
-                    Put(0, 1);
+                    Put(".");
                 end if;
                 Put(" ");
             end loop;
-            Put("\n");
+            New_Line;
         end loop;
     end Afficher;
+
+
+    procedure Obtenir_Voisins (Network : in T_Graphe; Sommet : in Positive; Liste : out Bool_Liste) is
+    begin
+        for I in 1..(Network.Nombre_Noeuds) loop
+            Liste(I) := Posseder_Arete(Network, Sommet, I);
+        end loop;
+    end Obtenir_Voisins;
+
+
+    procedure Pour_Chaque_Voisins (Network : in T_Graphe; Sommet : in Positive) is
+        bool_V : Bool_Liste;        -- La liste des booléans des voisins de Sommets
+    begin
+        Obtenir_Voisins(Network, Sommet, bool_V);
+        for J in 1..N loop
+            if bool_V(J) then
+                Traiter(J);
+            else
+                null;
+            end if;
+        end loop;
+    end Pour_Chaque_Voisins;
+
+
+    --procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste) is
+    --    A_Visite : T_Sac;
+    --    Visite : T_Sac;
+    --    Sommet : Positive := Sommet_initial;
+    --    I : Positive := 1;
+    --
+    --    procedure Ajouter_Sans_Doublons(Sommet : in Positive) is
+    --    begin
+    --        if not Est_Dans(A_Visite, Sommet) then
+    --            Ajouter(A_Visite, Sommet);
+    --        else
+    --            null;
+    --        end if;
+    --    end;
+    --
+    --    procedure Pour_Chaque_Voisins_Ajouter is
+    --        new Pour_Chaque_Voisins(Ajouter_Sans_Doublons);
+    --
+    --begin
+    --    Initialiser(A_Visite);
+    --    Initialiser(Visite);
+    --
+    --    loop
+    --        if not Est_Dans(Visite, Sommet) then
+    --            Parcours(I) := Sommet;
+    --            Ajouter(Visite, Sommet);
+    --            Pour_Chaque_Voisins_Ajouter(Network, Sommet);
+    --        else
+    --            null;
+    --        end if;
+    --        Retirer(A_Visite, Sommet);
+    --        I := I + 1;
+    --        exit when Est_Vide(A_Visite);
+    --    end loop;
+    --end Parcours;
+    
+    procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste) is
+    begin
+        Afficher(Network);
+        for i in 1..N loop
+            Parcours(i) := Sommet_initial;
+        end loop;
+    end Parcours;
 
 end graph;

@@ -11,10 +11,15 @@ package graph is
 
     type T_Graphe is limited private;
 
+    type Int_Liste is limited private;
+
+    type Bool_Liste is limited private;
+
     package maMatrix is
         new Matrix(Integer, "+", "*");
     use maMatrix;
-    
+
+
     -- Initialiser
     -- Initialise un graphe a N noeuds
     -- Paramètres :
@@ -24,6 +29,7 @@ package graph is
     -- Post:
     --      - Aucune
     procedure Initialiser (Graphe : out T_Graphe);
+
 
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence
@@ -45,6 +51,7 @@ package graph is
     --               ⌊ 0 0 0 1 0 ⌋
     procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
 
+
     -- Enregistrer
     -- Enregistrer un graphe dans un fichier File_Name à partir d'un graphe
     -- Paramêtres:
@@ -55,6 +62,7 @@ package graph is
     -- post :
     --      - Aucune
     procedure Enregistrer(Network : in T_Graphe; File_Name : in Unbounded_String);
+
 
     -- Posseder_Arete
     -- Renvoie s'il existe une arete entre le sommet de Depart et le sommet d'Arrivee
@@ -68,6 +76,7 @@ package graph is
     --      - Aucune
     function Posseder_Arete (Network: in T_Graphe; Depart : in Positive; Arrivee : in Positive) return Boolean;
 
+
     -- Creer_Arete
     -- Creer une arete du sommet Depart au sommet Arrivee dans le graphe Network
     -- Paramètres:
@@ -79,6 +88,7 @@ package graph is
     -- Post:
     --      - Aucune
     procedure Creer_Arete (Network : in out T_Graphe; Depart : in Positive; Arrivee : in Positive);
+
 
     -- Supprimer_Arete
     -- Supprime une arete du graphe du sommet Depart au sommet Arrivee
@@ -92,6 +102,7 @@ package graph is
     --      - Aucune
     procedure Supprimer_Arete (Network : in out T_Graphe; Depart : in Positive; Arrivee : in Positive);
 
+
     -- Copier_Graphe
     -- Copie le graphe Network dans le graphe New_Network
     -- Paramètres:
@@ -103,6 +114,7 @@ package graph is
     --      - Aucune
     procedure Copier_Graphe (Network : in T_Graphe; New_Network : out T_Graphe);
 
+
     -- Arite_Entrante
     -- Donner le dégré maximal entrant du graphe
     -- Paramètres:
@@ -112,6 +124,7 @@ package graph is
     -- Post:
     --      - Aucune
     function Arite_Entrante(Network : in T_Graphe) return Natural;
+
 
     -- Arite_Sortante
     -- Donner le dégré maximal sortant du graphe
@@ -123,6 +136,7 @@ package graph is
     --      - Aucune
     function Arite_Sortante(Network : in T_Graphe) return Natural;
 
+
     -- Degre_Entrant
     -- Déterminer le degré entrant du sommet donné en argument
     -- Paramètres:
@@ -132,7 +146,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Degre_Entrant (Network : in T_Graphe; Sommet : Positive) return Natural;
+    function Degre_Entrant (Network : in T_Graphe; Sommet : in Positive) return Natural;
 
 
     -- Degre_Sortant
@@ -144,7 +158,8 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Degre_Sortant (Network : in T_Graphe; Sommet : Positive) return Natural;
+    function Degre_Sortant (Network : in T_Graphe; Sommet : in Positive) return Natural;
+
 
     -- Nombre_Sommet
     -- Renvoie le nombre de sommets du graphe
@@ -154,7 +169,8 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Nombre_Sommet (Network : T_Graphe) return Natural;
+    function Nombre_Sommet (Network : in T_Graphe) return Natural;
+
 
     -- Obtenir_Matrice
     -- Renvoie la matrice du graphe
@@ -164,7 +180,8 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Obtenir_Matrice (Network : T_Graphe) return T_Matrix;
+    function Obtenir_Matrice (Network : in T_Graphe) return T_Matrix;
+
 
     -- Afficher
     -- Afficher la matrice d'adjacence du graphe
@@ -174,9 +191,62 @@ package graph is
     --      - Aucune
     -- Post :
     --      - Aucune
-    procedure Afficher(Network : T_Graphe);
+    procedure Afficher(Network : in T_Graphe);
+
+
+    -- Obtenir_Voisins
+    -- Donner les voisins d'un graphe
+    -- Paramètres :
+    --      - Network       [in]        Le graphe sur lequel on travaille
+    --      - Sommet        [in]        Le sommet ou l'on veut connaitre les voisins
+    --      - Liste         [out]       La liste des Voisins de Sommet
+    -- Pre:
+    --      - Aucune
+    -- Post:
+    --      - Aucune
+    procedure Obtenir_Voisins (Network : in T_Graphe; Sommet : in Positive; Liste : out Bool_Liste);
+
+
+    -- Pour_Chaque_Voisins
+    -- Appliquer Traiter à chaque voisin
+    -- Paramètres : 
+    --      - Network       [in]        Le graphe sur lequel on travaille
+    --      - Sommet        [in]        Le sommet dont on traite ses voisins
+    -- Pre : 
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    generic 
+        with procedure Traiter(Sommet : in Positive);
+    procedure Pour_Chaque_Voisins(Network : in T_Graphe; Sommet : in Positive);
+
+
+
+    -- Parcours
+    -- Parcours le graphe en largeur
+    -- Paramètres :
+    --      - Network       [in]        Le graphe sur lequel on va  éffectuer un parcours en largeur
+    --      - Sommet_initial[in]        Le sommet de départ du parcours
+    --      - Parcours      [out]       Le parcours du graphe
+    -- Pre :
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    generic
+        type T_Sac;
+        with procedure Ajouter(Sac : T_Sac; elt : in Integer);
+        with procedure Retirer(Sac : T_Sac; Sommet : out Positive);
+        with function Est_Dans(Sac : T_Sac; elt : in Integer) return Boolean;
+        with function Est_Vide(Sac : T_Sac) return Boolean;
+        with procedure Initialiser (Sac : T_Sac);
+    procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste);
+
 
 private
+    type Int_Liste is array(1..N) of Integer;
+
+    type Bool_Liste is array(1..N) of Boolean;
+
     type T_Graphe is record
         Nombre_Noeuds : Natural;
         Mat : T_Matrix(N, N);

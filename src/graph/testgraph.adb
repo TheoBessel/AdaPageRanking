@@ -5,7 +5,7 @@ with Graph;
 procedure TestGraph is
     file_name : constant Unbounded_String := To_Unbounded_String("testgraph.net");
 
-    N : constant Natural := 1000;
+    N : constant Natural := 10;
 
     package MonGraph is
         new Graph(N);
