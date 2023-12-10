@@ -30,8 +30,8 @@ package body graph is
         --      - Aucune
         procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
             Caractere : Character;                              -- chaine de caractère lu par le curseur
-            long : Natural := length(Line);                     -- La longueur de la ligne
-            I : Natural;                                       -- Itérateur sur la chaine de caractère
+            long : constant Natural := length(Line);            -- La longueur de la ligne
+            I : Natural;                                        -- Itérateur sur la chaine de caractère
         begin
             I := 0;
             loop
@@ -56,7 +56,7 @@ package body graph is
         loop
             line := To_Unbounded_String(Get_Line(File));
             Parseur(line, Depart, Arrivee);
-            Creer_Arete(Network, Depart, Arrivee, 1);
+            Creer_Arete(Network, Depart, Arrivee);
             Skip_Line(File);
             exit when End_of_file(File);
         end loop;
@@ -65,7 +65,7 @@ package body graph is
     end Lire_Graphe;
 
 
-    procedure Enregistrer (Graphe : in T_Graphe; File_Name : in Unbounded_String) is
+    procedure Enregistrer (Network : in T_Graphe; File_Name : in Unbounded_String) is
         
         -- Tester_Fichier
         -- Creer le fichier Filename s'il n'existe pas
@@ -78,20 +78,20 @@ package body graph is
         procedure Tester_Fichier is
             File : File_Type;
         begin
-            Create(File, Name => File_Name);
+            Create(File, Name => To_String(File_Name));
             Close(File);
         end Tester_Fichier;
         
 
-        File : constant File_type;  -- Variable qui stocke le fichier du graphe 
+        File : File_type;  -- Variable qui stocke le fichier du graphe 
 
     begin
         Tester_Fichier;
         open(File, Name => To_string(File_Name), mode => Out_File);
-        for Depart in 1..(Graphe.Nombre_Noeuds) loop
-            for Arrivee in 1..(Graphe.Nombre_Noeuds) loop
-                if Posseder_Arete(Graphe, Depart, Arrivee) then
-                    Put_Line(File, To_string(Depart) & " " & To_string(Arrivee));
+        for Depart in 1..(Network.Nombre_Noeuds) loop
+            for Arrivee in 1..(Network.Nombre_Noeuds) loop
+                if Posseder_Arete(Network, Depart, Arrivee) then
+                    Put(File, Natural'Image(Depart));Put(File, " ");Put_line(File, Natural'Image(Arrivee));
                 end if;
             end loop;
         end loop;
@@ -127,7 +127,7 @@ package body graph is
 
     procedure Copier_Graphe (Network : in T_Graphe; New_Network : out T_Graphe) is
     begin
-        Initialiser(New_Network, Network.Nombre_Noeuds);
+        Initialiser(New_Network);
         for Depart in 1..(Network.Nombre_Noeuds) loop
             for Arrivee in 1..(Network.Nombre_Noeuds) loop
                 if Posseder_Arete(Network, Depart, Arrivee) then
@@ -142,40 +142,38 @@ package body graph is
 
 
     function Arite_Sortante (Network : in T_Graphe) return Natural is
-        Max : Natural;      -- Max des degrés sortant des sommets visités
-        Deg : Natural;      -- Nombre d'arete sortante du sommet i
+        Max : Natural := 0;     -- Max des degrés sortant des sommets visités
+        Deg : Natural;          -- Nombre d'arete sortante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
             Deg := Degre_Entrant(Network, i);
-
             if Max < Deg then
                 Max := Deg;
             else
                 null;
             end if;
-            
         end loop;
+        return Max;
     end Arite_Sortante;
     
 
     function Arite_Entrante (Network : in T_Graphe) return Natural is
-        Max : Natural;      -- Max des degrés entrants des sommets visités
-        Deg : Natural;      -- Nombre d'arete entrante du sommet i
+        Max : Natural := 0;     -- Max des degrés entrants des sommets visités
+        Deg : Natural;          -- Nombre d'arete entrante du sommet i
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
             Deg := Degre_Entrant(Network, i);
-
             if Max < Deg then
                 Max := Deg;
             else
                 null;
             end if;
-            
         end loop;
+        return Max;
     end Arite_Entrante;
 
 
-    function Degre_Entrant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
+    function Degre_Entrant (Network : in T_Graphe; Sommet : in Positive) return Natural is
         Sum : Natural := 0;
     begin
         for i in 1..(Network.Nombre_Noeuds) loop
@@ -189,7 +187,7 @@ package body graph is
     end Degre_Entrant;
 
 
-    function Degre_Sortant (Network : in T_Graphe; Sommet : in T_Graphe) return Natural is
+    function Degre_Sortant (Network : in T_Graphe; Sommet : in Positive) return Natural is
         Sum : Natural := 0;
     begin
         for i in 1..(Network.Nombre_Noeuds) loop

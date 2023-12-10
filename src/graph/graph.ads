@@ -103,6 +103,16 @@ package graph is
     --      - Aucune
     procedure Copier_Graphe (Network : in T_Graphe; New_Network : out T_Graphe);
 
+    -- Arite_Entrante
+    -- Donner le dégré maximal entrant du graphe
+    -- Paramètres:
+    --      - Network       [in]        Le graphe dont on va déterminer le degré maximal sortant
+    -- Pre:
+    --      - Aucune
+    -- Post:
+    --      - Aucune
+    function Arite_Entrante(Network : in T_Graphe) return Natural;
+
     -- Arite_Sortante
     -- Donner le dégré maximal sortant du graphe
     -- Paramètres:
@@ -111,7 +121,7 @@ package graph is
     --      - Aucune
     -- Post:
     --      - Aucune
-    function Arite_Entrante(Network : in T_Graphe) return Natural;
+    function Arite_Sortante(Network : in T_Graphe) return Natural;
 
     -- Degre_Entrant
     -- Déterminer le degré entrant du sommet donné en argument
