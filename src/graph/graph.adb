@@ -4,7 +4,7 @@ with Ada.Integer_Text_IO;   use Ada.Integer_Text_IO;
 
 package body graph is
 
-    procedure Initialiser (Graphe : out T_Graphe; N : in Natural) is
+    procedure Initialiser (Graphe : out T_Graphe) is
     begin
         Graphe.Nombre_Noeuds := N;
         Graphe.Mat := init(N, N, 0);
@@ -15,34 +15,52 @@ package body graph is
         File : File_type;               -- Variable qui stocke le fichier du graphe 
         N : Natural;                    -- Nombre de noeuds du graphe
         line : Unbounded_String;        -- ligne du fichier
-        Caractere : Unbounded_String;   -- chaine de caractère lu par le curseur
-        depart : Positive;              -- le numéro du node de départ
-        arrive : Positive;              -- le numéro du node d'arrivée
+        Depart : Positive;              -- le numéro du node de départ
+        Arrivee : Positive;              -- le numéro du node d'arrivée
+        
+        -- Parseur
+        -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
+        -- Paramètres :
+        --      - Line      [in]        La ligne qui possède les deux entier séparé par un espace
+        --      - Depart    [out]       Le premier entier
+        --      - Arrivee   [out]       Le dexième entier
+        -- Pre:
+        --      - Aucune
+        -- Post :
+        --      - Aucune
+        procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
+            Caractere : Character;                              -- chaine de caractère lu par le curseur
+            long : Natural := length(Line);                     -- La longueur de la ligne
+            I : Natural;                                       -- Itérateur sur la chaine de caractère
+        begin
+            I := 0;
+            loop
+                I:= I+1;
+                Caractere := Element(Line, I);
+                exit when Caractere = ' ' or I = long;
+            end loop;
+            Depart := Integer'Value(To_String(Line)(1..I));
+            Arrivee := Integer'Value(To_String(Line)(I..long));
+
+        end Parseur;
+
     begin
         open(File, Name => To_string(File_Name), mode => In_File);
         -- lit le nombre de noeuds dans le fichier
         N := Integer'Value(Get_line(File));
         Skip_Line;
+        Put("N = "); Put(N); New_Line;
 
-        Initialiser(Network, N);
+        Initialiser(Network);
         
         loop
             line := To_Unbounded_String(Get_Line(File));
-            Get(line, C);
-
-            --------- Affichage debug --------
-            New_Line;
-            Put_Line(C);
-            New_Line;
-            ----------------------------------
-            
-            depart := Integer'Value(C);
-            Get(line, C);
-            arrive := Integer'Value(C);
-            Creer_Arete(Network, depart, arrive, 1);
+            Parseur(line, Depart, Arrivee);
+            Creer_Arete(Network, Depart, Arrivee, 1);
             Skip_Line(File);
             exit when End_of_file(File);
         end loop;
+
         close(File);
     end Lire_Graphe;
 
@@ -194,7 +212,7 @@ package body graph is
     function Obtenir_Matrice (Network : in T_Graphe) return T_Matrix is
     begin
         return Network.Mat;
-    end Obtenir_Matrice;;
+    end Obtenir_Matrice;
 
     procedure Afficher (Network : T_Graphe) is
     begin

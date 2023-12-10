@@ -19,12 +19,11 @@ package graph is
     -- Initialise un graphe a N noeuds
     -- Paramètres :
     --      - Graphe       [out]        Le graphe à initialiser
-    --      - N            [in]         Le nombre de noeuds du graphe
     -- Pre:
     --      - Aucune
     -- Post:
     --      - Aucune
-    procedure Initialiser (Graphe : out T_Graphe; N : in Natural);
+    procedure Initialiser (Graphe : out T_Graphe);
 
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence
@@ -110,7 +109,8 @@ package graph is
     --      - Network       [in]        Le graphe dont on va déterminer le degré maximal sortant
     -- Pre:
     --      - Aucune
-    -- Post:Naturalne
+    -- Post:
+    --      - Aucune
     function Arite_Entrante(Network : in T_Graphe) return Natural;
 
     -- Degre_Entrant
