@@ -249,48 +249,48 @@ package body graph is
     end Pour_Chaque_Voisins;
 
 
-    --procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste) is
-    --    A_Visite : T_Sac;
-    --    Visite : T_Sac;
-    --    Sommet : Positive := Sommet_initial;
-    --    I : Positive := 1;
-    --
-    --    procedure Ajouter_Sans_Doublons(Sommet : in Positive) is
-    --    begin
-    --        if not Est_Dans(A_Visite, Sommet) then
-    --            Ajouter(A_Visite, Sommet);
-    --        else
-    --            null;
-    --        end if;
-    --    end;
-    --
-    --    procedure Pour_Chaque_Voisins_Ajouter is
-    --        new Pour_Chaque_Voisins(Ajouter_Sans_Doublons);
-    --
-    --begin
-    --    Initialiser(A_Visite);
-    --    Initialiser(Visite);
-    --
-    --    loop
-    --        if not Est_Dans(Visite, Sommet) then
-    --            Parcours(I) := Sommet;
-    --            Ajouter(Visite, Sommet);
-    --            Pour_Chaque_Voisins_Ajouter(Network, Sommet);
-    --        else
-    --            null;
-    --        end if;
-    --        Retirer(A_Visite, Sommet);
-    --        I := I + 1;
-    --        exit when Est_Vide(A_Visite);
-    --    end loop;
-    --end Parcours;
-    
     procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste) is
+        A_Visite : T_Sac;
+        Visite : T_Sac;
+        Sommet : Positive := Sommet_initial;
+        I : Positive := 1;
+    
+        procedure Ajouter_Sans_Doublons(Sommet : in Positive) is
+        begin
+            if not Est_Dans(A_Visite, Sommet) then
+                Ajouter(A_Visite, Sommet);
+            else
+                null;
+            end if;
+        end;
+    
+        procedure Pour_Chaque_Voisins_Ajouter is
+            new Pour_Chaque_Voisins(Ajouter_Sans_Doublons);
+    
     begin
-        Afficher(Network);
-        for i in 1..N loop
-            Parcours(i) := Sommet_initial;
+        Initialiser(A_Visite);
+        Initialiser(Visite);
+    
+        loop
+            if not Est_Dans(Visite, Sommet) then
+                Parcours(I) := Sommet;
+                Ajouter(Visite, Sommet);
+                Pour_Chaque_Voisins_Ajouter(Network, Sommet);
+            else
+                null;
+            end if;
+            Retirer(A_Visite, Sommet);
+            I := I + 1;
+            exit when Est_Vide(A_Visite);
         end loop;
     end Parcours;
+
+    --procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste) is
+    --begin
+    --    Afficher(Network);
+    --    for i in 1..N loop
+    --        Parcours(i) := Sommet_initial;
+    --    end loop;
+    --end Parcours;
 
 end graph;
