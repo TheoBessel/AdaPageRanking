@@ -233,12 +233,12 @@ package graph is
     -- Post :
     --      - Aucune
     generic
-        type T_Sac;
-        with procedure Ajouter(Sac : T_Sac; elt : in Integer);
-        with procedure Retirer(Sac : T_Sac; Sommet : out Positive);
-        with function Est_Dans(Sac : T_Sac; elt : in Integer) return Boolean;
-        with function Est_Vide(Sac : T_Sac) return Boolean;
-        with procedure Initialiser (Sac : T_Sac);
+        type T_Sac is (<>);
+        with procedure Ajouter(Sac : in out T_Sac; elt : in Integer);
+        with procedure Retirer(Sac : in out T_Sac; Sommet : out Positive);
+        with function Est_Dans(Sac : in T_Sac; elt : in Integer) return Boolean;
+        with function Est_Vide(Sac : in T_Sac) return Boolean;
+        with procedure Initialiser (Sac : out T_Sac);
     procedure Parcours (Network : in T_Graphe; Sommet_initial : in Positive; Parcours : out Int_Liste);
 
 
