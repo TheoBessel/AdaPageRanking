@@ -12,12 +12,14 @@ package body graph is
 
 
     procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_graphe) is
-        File : File_type;               -- Variable qui stocke le fichier du graphe 
-        N : Natural;                    -- Nombre de noeuds du graphe
-        line : Unbounded_String;        -- ligne du fichier
-        Depart : Positive;              -- le numéro du node de départ
-        Arrivee : Positive;              -- le numéro du node d'arrivée
-        
+        File : File_type;                       -- Variable qui stocke le fichier du graphe 
+        N : Natural;                            -- Nombre de noeuds du graphe
+        line : Unbounded_String;                -- ligne du fichier
+        Depart : Positive;                      -- le numéro du node de départ
+        Arrivee : Positive;                     -- le numéro du node d'arrivée
+        Implementation_Impossible : exception;  -- Exception levé quand le graph n'est pas implémentable à cause de la mauvaise valeur de généricité de Graphe
+
+
         -- Parseur
         -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
         -- Paramètres :
@@ -49,6 +51,12 @@ package body graph is
 
         -- lit le nombre de noeuds dans le fichier
         N := Integer'Value(Get_line(File));
+        -- Vérifie que le graphe est Implémentable avec la Valeur du type
+        if N > Network.Nombre_Noeuds then
+            raise Implementation_Impossible;
+        else
+            null;
+        end if;
         
         Initialiser(Network);
         
