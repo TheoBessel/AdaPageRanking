@@ -55,7 +55,7 @@ package body IOStream is
                         null;
                     end if;
                     begin
-                        Constantes.k : constant Natural := Natural'Value(args.V_Args(J + 1));
+                        Constantes.k := Natural'Value(args.V_Args(J + 1));
                     exception
                         when others =>
                             raise Bad_Arguments_Exception with "L'argument qui suit -K n'est pas un entier Naturel";
@@ -122,7 +122,7 @@ package body IOStream is
                         null;
                     end if;
 
-                    Constantes.res := To_Unbounded_String(args.V_Args(J + 1));
+                    Constantes.prefixe := To_Unbounded_String(args.V_Args(J + 1));
 
                 when others =>
                     raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
@@ -143,7 +143,7 @@ package body IOStream is
         end if;
         
         if prefix_non_initialisee then
-            Constantes.res := To_Unbounded_String("output");
+            Constantes.prefixe := To_Unbounded_String("output");
         else
             null;
         end if;

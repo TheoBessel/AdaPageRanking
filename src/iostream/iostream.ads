@@ -4,13 +4,14 @@ with Ada.Float_Text_IO;		use Ada.Float_Text_IO;
 with Ada.Integer_Text_IO;	use Ada.Integer_Text_IO;
 with Ada.Command_line;		use Ada.Command_line;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with graph;
 
 generic
     type T_Float is digits <>;
 
 package IOStream is
     
-    type T_Constantes is private;
+    type T_Constantes;
 
     type T_Mode is (
         Pleine,
@@ -63,15 +64,16 @@ package IOStream is
     --               ⌊ 0 0 0 1 0 ⌋
     procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
 
-private
-
     type T_Constantes is record
         
-        alpha : constant T_Float;
-        k : constant Natural;
-        eps : constant T_Float;
-        mode : constant T_Mode;
-        res : constant Unbounded_String;
+        alpha : T_Float;
+        k : Natural;
+        eps : T_Float;
+        mode : T_Mode;
+        prefixe : Unbounded_String;
     end record;
+
+private
+
 
 end IOStream;
