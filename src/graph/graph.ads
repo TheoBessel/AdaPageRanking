@@ -30,28 +30,6 @@ package graph is
     --      - Aucune
     procedure Initialiser (Graphe : out T_Graphe);
 
-
-    -- Lire_Graphe
-    -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence de taille N erreur si le nombre de noeud dans le fichier est supérieur à la valeur de généricité
-    -- Paramètres :
-    --      - File_Name     [in]        Le nom du fichier dont le graphe doit être extrait
-    --      - Network       [out]       La variable qui stocke le graphe
-    -- pre :
-    --      - Aucune
-    -- post :
-    --      - Aucune
-    -- Exemple :
-    --      Graphe : T_Graphe;
-    --      File_Name : Unbounded_String := To_Unbounded_String("Test.net");
-    --      Lire_graphe(File_Name, Graphe);
-    --      Graphe = ⌈ 0 1 1 1 0 ⌉
-    --               | 1 0 1 0 0 |
-    --               | 1 1 0 0 0 |
-    --               | 1 0 0 0 1 |
-    --               ⌊ 0 0 0 1 0 ⌋
-    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
-
-
     -- Enregistrer
     -- Enregistrer un graphe dans un fichier File_Name à partir d'un graphe
     -- Paramêtres:
