@@ -54,4 +54,67 @@ package body IOStream is
             res := To_Unbounded_String(parse_composed_arg("-R"));
         end if;
     end;
+
+
+
+    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_graphe) is
+        File : File_type;                       -- Variable qui stocke le fichier du graphe 
+        N : Natural;                            -- Nombre de noeuds du graphe
+        line : Unbounded_String;                -- ligne du fichier
+        Depart : Positive;                      -- le numéro du node de départ
+        Arrivee : Positive;                     -- le numéro du node d'arrivée
+        Implementation_Impossible : exception;  -- Exception levé quand le graph n'est pas implémentable à cause de la mauvaise valeur de généricité de Graphe
+
+
+        -- Parseur
+        -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
+        -- Paramètres :
+        --      - Line      [in]        La ligne qui possède les deux entier séparé par un espace
+        --      - Depart    [out]       Le premier entier
+        --      - Arrivee   [out]       Le dexième entier
+        -- Pre:
+        --      - Aucune
+        -- Post :
+        --      - Aucune
+        procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
+            Caractere : Character;                              -- chaine de caractère lu par le curseur
+            long : constant Natural := length(Line);            -- La longueur de la ligne
+            I : Natural;                                        -- Itérateur sur la chaine de caractère
+        begin
+            I := 0;
+            loop
+                I:= I+1;
+                Caractere := Element(Line, I);
+                exit when Caractere = ' ' or I = long;
+            end loop;
+            Depart := Integer'Value(To_String(Line)(1..I));
+            Arrivee := Integer'Value(To_String(Line)(I..long));
+
+        end Parseur;
+
+    begin
+        open(File, Name => To_string(File_Name), mode => In_File);
+
+        -- lit le nombre de noeuds dans le fichier
+        N := Integer'Value(Get_line(File));
+        -- Vérifie que le graphe est Implémentable avec la Valeur du type
+        if N > Network.Nombre_Noeuds then
+            raise Implementation_Impossible;
+        else
+            null;
+        end if;
+        
+        Initialiser(Network);
+        
+        loop
+            line := To_Unbounded_String(Get_Line(File));
+            Parseur(line, Depart, Arrivee);
+            Creer_Arete(Network, Depart, Arrivee);
+            exit when End_of_file(File);
+        end loop;
+
+        close(File);
+    end Lire_Graphe;
+
+
 end IOStream;
