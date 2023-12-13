@@ -1,59 +1,167 @@
+-- Implémantation du module IOStream
+
 package body IOStream is
-    procedure parse_args(args : T_Args) is
-        function parse_composed_arg(prefix : String) return String is
-            found : Boolean := False;
-            output : Unbounded_String;
-        begin
-            for i in 1..args.V_Count loop
-                if (args.V_Args(i) = To_Unbounded_String(prefix)) then
-                    if found then
-                        raise Bad_Arguments_Exception with "The argument " & To_String(args.V_Args(i)) & " has already been specified";
-                    elsif i < args.V_Count then
-                        output := args.V_Args(i + 1);
-                        found := True;
-                    else
-                        raise Bad_Arguments_Exception with "An argument is missing after : " & To_String(args.V_Args(i));
-                    end if;
-                end if;
-            end loop;
-            return To_String(output);
-        end;
-        function parse_optionnal_arg(true_option : String; false_option : String) return Boolean is
-            found : Boolean := False;
-            output : Boolean := True;
-        begin
-            for i in 1..args.V_Count loop
-                if (args.V_Args(i) = To_Unbounded_String(true_option)) then
-                    if found then
-                        raise Bad_Arguments_Exception with "The argument " & To_String(args.V_Args(i)) & " has already been specified";
-                    else
-                        output := True;
-                        found := True;
-                    end if;
-                elsif (args.V_Args(i) = To_Unbounded_String(false_option)) then
-                    if found then
-                        raise Bad_Arguments_Exception with "The argument " & To_String(args.V_Args(i)) & " has already been specified";
-                    else
-                        output := False;
-                        found := True;
-                    end if;
-                end if;
-            end loop;
-            return output;
-        end;
+
+    procedure Parse_Args (args : in T_Args; Constantes : out T_Constantes) is
+        alpha_non_initialisee : Boolean := True;
+        k_non_initialisee : Boolean := True;
+        eps_non_initialisee : Boolean := True;
+        mode_non_initialisee : Boolean := True;
+        res_non_initialisee : Boolean := True;
+        prefix_non_initialisee : Boolean := True;
     begin
-        if args.V_Count < 1 then
-            raise Bad_Arguments_Exception with "The program need at list one argument";
+        for J in 1..args.V_Count loop
+            case args.V_Args(J) is
+
+                when "-A" =>
+                    
+                    if not alpha_non_initialisee then
+                        raise Bad_Arguments_Exception with "Double définition de alpha en argument";
+                    else
+                        null;
+                    end if;
+
+                    alpha_non_initialisee := False;
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de Alpha donné en argument";
+                    else
+                        null;
+                    end if;
+
+                    begin
+                        Constantes.alpha := Float'Value(args.V_Args(J + 1));
+                        if alpha < 0 or alpha > 1 then
+                            raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas  compris entre 0 et 1";
+                        else
+                            null;
+                        end if;
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas un float";
+                    end;
+
+                when "-K" =>
+                    -- vérification que K n'a pas déjà était définie
+                    if not k_non_initialisee then
+                        raise Bad_Arguments_Exception  with "Double définition de k en argument";
+                    else
+                        null;
+                    end if;
+
+                    k_non_initialisee := False;
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de k donné en argument";
+                    else
+                        null;
+                    end if;
+                    begin
+                        Constantes.k : constant Natural := Natural'Value(args.V_Args(J + 1));
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -K n'est pas un entier Naturel";
+                    end;
+            
+                when "-E" =>
+                    -- vérification que eps n'a pas déjà était définie
+                    if not eps_non_initialisee then
+                        raise Bad_Arguments_Exception with "Double définition de eps en argument";
+                    else
+                        null;
+                    end if;
+
+                    eps_non_initialisee := False;
+
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de eps donné en argument";
+                    else
+                        null;
+                    end if;
+
+                    begin
+                        Constantes.eps := Float'Value(args.V_Args(J + 1));
+                        if Constantes.eps < 0 then
+                            raise Bad_Arguments_Exception with "L'arguement qui suit -E doit être un Float positif";
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -E n'est pas un Float";
+                    end;
+
+                when "-P" =>
+                    if not mode_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
+                    else
+                        null;
+                    end if;
+
+                    mode_non_initialisee := False;
+                    
+                    Constantes.mode := Pleine;
+
+
+                when "-C" =>
+                    if not mode_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
+                    else
+                        null;
+                    end if;
+
+                    mode_non_initialisee := False;
+
+                    Constantes.mode := Creuse;
+
+                when "-R" =>
+                    if not prefix_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le préfixe de sortie a déjà été initialisé";
+                    else
+                        null;
+                    end if;
+                    
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de prefixe donné en argument";
+                    else
+                        null;
+                    end if;
+
+                    Constantes.res := To_Unbounded_String(args.V_Args(J + 1));
+
+                when others =>
+                    raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
+            end case;
+        end loop;
+
+        -- Initialisation des constantes non initialisée
+        if alpha_non_initialisee then
+            Constantes.alpha := 0.85;
         else
-            alpha := T_Float'Value(parse_composed_arg("-A"));
-            k := Integer'Value(parse_composed_arg("-K"));
-            eps := T_Float'Value(parse_composed_arg("-E"));
-            if not parse_optionnal_arg("-P","-C") then
-                mode := Creuse;
-            end if;
-            res := To_Unbounded_String(parse_composed_arg("-R"));
+            null;
         end if;
-    end;
+        
+        if k_non_initialisee then
+            Constantes.k := 150;
+        else
+            null;
+        end if;
+        
+        if prefix_non_initialisee then
+            Constantes.res := To_Unbounded_String("output");
+        else
+            null;
+        end if;
+
+        if eps_non_initialisee then
+            Constantes.eps := 0.0;
+        else
+            null;
+        end if;
+        
+        
+        if mode_non_initialisee then
+            Constantes.mode := Creuse;
+        else
+            null;
+        end if;         
+
+    end Parse_Args;
 
 
 

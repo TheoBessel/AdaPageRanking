@@ -9,25 +9,36 @@ generic
     type T_Float is digits <>;
 
 package IOStream is
+    
+    type T_Constantes is private;
+
     type T_Mode is (
         Pleine,
         Creuse
     );
+
+    -- le tableau vide des arguments
     type T_Content is array (Positive range <>) of Unbounded_String;
+    
+    -- les arguments
     type T_Args(V_Count : Natural) is tagged record
         V_Args : T_Content(1..V_Count);
     end record;
 
+    -- Exception levé quand les argument ne fonctionne pas
     Bad_Arguments_Exception : Exception;
 
-    alpha : T_Float := 0.85;
-    k : Natural := 150;
-    eps : T_Float := 0.0;
-    mode : T_Mode := Pleine;
-    res : Unbounded_String := To_Unbounded_String("output");
 
-    procedure parse_args(args : T_Args);
-    
+    -- Parse_Args
+    -- Traiter les paramètres et définir les constantes
+    -- Paramètres : 
+    --      - args          [in]        Le tableau des arguments données
+    --      - Constantes    [out]       Record qui contient toutes les constantes
+    -- pre :
+    --      - Auncune
+    -- post :
+    --      - Aucune
+    procedure Parse_Args(args : in T_Args; Constantes : out T_Constantes);
     
     --procedure parse_file(name : Unbounded_String);
 
@@ -53,4 +64,14 @@ package IOStream is
     procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
 
 private
+
+    type T_Constantes is record
+        
+        alpha : constant T_Float;
+        k : constant Natural;
+        eps : constant T_Float;
+        mode : constant T_Mode;
+        res : constant Unbounded_String;
+    end record;
+
 end IOStream;
