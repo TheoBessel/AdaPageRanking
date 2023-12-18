@@ -39,10 +39,31 @@ package IOStream is
     --      - Auncune
     -- post :
     --      - Aucune
-    procedure Parse_Args(args : in T_Args; Constantes : out T_Constantes);
-    
-    --procedure parse_file(name : Unbounded_String);
+    function Parse_Args(args : in T_Args) return T_Constantes;
 
+    -- Lire_Nombre_Sommet
+    -- retourne le nombre de sommet du graphe
+    -- Paramètres :
+    --      - Aucun
+    -- Pre :
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    function Lire_Nombre_Sommet(File_Name : in Unbounded_String) return Natural;
+
+    -- Parseur
+    -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
+    -- Paramètres :
+    --      - Line      [in]        La ligne qui possède les deux entier séparé par un espace
+    --      - Depart    [out]       Le premier entier
+    --      - Arrivee   [out]       Le dexième entier
+    -- Pre:
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive);
+
+    --procedure parse_file(name : Unbounded_String);
 
     -- Lire_Graphe
     -- lire le fichier texte associé à File_Name et retourne une matrice d'adjacence de taille N erreur si le nombre de noeud dans le fichier est supérieur à la valeur de généricité

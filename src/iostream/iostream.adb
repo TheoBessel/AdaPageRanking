@@ -2,7 +2,8 @@
 
 package body IOStream is
 
-    procedure Parse_Args (args : in T_Args; Constantes : out T_Constantes) is
+    function Parse_Args (args : in T_Args) return T_Constantes is
+        constantes : T_Constantes;
         alpha_non_initialisee : Boolean := True;
         k_non_initialisee : Boolean := True;
         eps_non_initialisee : Boolean := True;
@@ -11,7 +12,7 @@ package body IOStream is
         prefix_non_initialisee : Boolean := True;
     begin
         for J in 1..args.V_Count loop
-            case args.V_Args(J) is
+            case To_String(args.V_Args(J)) is
 
                 when "-A" =>
                     
@@ -81,6 +82,9 @@ package body IOStream is
                         Constantes.eps := Float'Value(args.V_Args(J + 1));
                         if Constantes.eps < 0 then
                             raise Bad_Arguments_Exception with "L'arguement qui suit -E doit être un Float positif";
+                        else
+                            null;
+                        end if;
                     exception
                         when others =>
                             raise Bad_Arguments_Exception with "L'argument qui suit -E n'est pas un Float";
@@ -161,45 +165,12 @@ package body IOStream is
             null;
         end if;         
 
+        return Constantes;
     end Parse_Args;
 
-
-
-    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_graphe) is
+    function Lire_Nombre_Sommet(File_Name : in Unbounded_String) return Natural is
+        N : Natural;                            -- Le Nombre de Noeuds
         File : File_type;                       -- Variable qui stocke le fichier du graphe 
-        N : Natural;                            -- Nombre de noeuds du graphe
-        line : Unbounded_String;                -- ligne du fichier
-        Depart : Positive;                      -- le numéro du node de départ
-        Arrivee : Positive;                     -- le numéro du node d'arrivée
-        Implementation_Impossible : exception;  -- Exception levé quand le graph n'est pas implémentable à cause de la mauvaise valeur de généricité de Graphe
-
-
-        -- Parseur
-        -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
-        -- Paramètres :
-        --      - Line      [in]        La ligne qui possède les deux entier séparé par un espace
-        --      - Depart    [out]       Le premier entier
-        --      - Arrivee   [out]       Le dexième entier
-        -- Pre:
-        --      - Aucune
-        -- Post :
-        --      - Aucune
-        procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
-            Caractere : Character;                              -- chaine de caractère lu par le curseur
-            long : constant Natural := length(Line);            -- La longueur de la ligne
-            I : Natural;                                        -- Itérateur sur la chaine de caractère
-        begin
-            I := 0;
-            loop
-                I:= I+1;
-                Caractere := Element(Line, I);
-                exit when Caractere = ' ' or I = long;
-            end loop;
-            Depart := Integer'Value(To_String(Line)(1..I));
-            Arrivee := Integer'Value(To_String(Line)(I..long));
-
-        end Parseur;
-
     begin
         open(File, Name => To_string(File_Name), mode => In_File);
 
@@ -207,22 +178,60 @@ package body IOStream is
         N := Integer'Value(Get_line(File));
         -- Vérifie que le graphe est Implémentable avec la Valeur du type
         if N > Network.Nombre_Noeuds then
-            raise Implementation_Impossible;
+            close(File);
+            raise Bad_Arguments_Exception;
         else
             null;
         end if;
-        
+        close(File);
+        return N;
+    end Lire_Nombre_Sommet;
+
+
+    procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
+        Caractere : Character;                              -- chaine de caractère lu par le curseur
+        long : constant Natural := length(Line);            -- La longueur de la ligne
+        I : Natural;                                        -- Itérateur sur la chaine de caractère
+    begin
+        I := 0;
+        loop
+            I:= I+1;
+            Caractere := Element(Line, I);
+            exit when Caractere = ' ' or I = long;
+        end loop;
+        Depart := Integer'Value(To_String(Line)(1..I));
+        Arrivee := Integer'Value(To_String(Line)(I..long));
+
+    end Parseur;
+
+    procedure Lire_Graphe(File_Name : in Unbounded_String; N : in Natural; Network : out T_graphe) is
+        File : File_type;                       -- Variable qui stocke le fichier du graphe 
+        line : Unbounded_String;                -- ligne du fichier
+        Depart : Positive;                      -- le numéro du node de départ
+        Arrivee : Positive;                     -- le numéro du node d'arrivée
+
+        --N : constant Natural := Lire_Nombre_Sommet;-- Nombre de noeuds du graphe
+
+    begin
+        open(File, Name => To_string(File_Name), mode => In_File);
+        Skip_Line(File);
+
         Initialiser(Network);
         
         loop
             line := To_Unbounded_String(Get_Line(File));
             Parseur(line, Depart, Arrivee);
+            -- vérification de la cohérence des sommets données dans le fichier
+            if 0 >= Depart or Depart >= N or Arrivee <= 0 or Arrivee >= N then
+                raise Bad_Arguments_Exception;
+            else
+                null;
+            end if;
             Creer_Arete(Network, Depart, Arrivee);
             exit when End_of_file(File);
         end loop;
 
         close(File);
     end Lire_Graphe;
-
 
 end IOStream;

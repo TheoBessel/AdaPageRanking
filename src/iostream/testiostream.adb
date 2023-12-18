@@ -11,29 +11,29 @@ procedure TestIOStream is
         new IOStream(T_Float => Float);
     use IO;
     
+    function Obtenir_argument return T_Content is
+        res : T_Content(1..Argument_Count);
+    begin
+        for J in 1..Argument_Count loop
+            res(J) := To_Unbounded_String(Argument(J));
+        end loop;
+        return res;
+    end Obtenir_argument;
+
     -- récupération des Constants
-    args : T_Args(Argument_Count);
+    args : constant T_Args(Argument_Count) := (V_Count => Argument_Count, V_Args => Obtenir_argument);
     
-    constantes : T_Constantes;
-    alpha : Float := constantes.alpha;
-    k : Natural := constantes.k;
-    eps : Float := constantes.eps;
-    mode : T_Mode := constantes.mode;
-    prefixe : Unbounded_String := constantes.prefixe;
+    constantes : constant T_Constantes := Parse_Args(Args);
+    alpha : constant Float := constantes.alpha;
+    k : constant Natural := constantes.k;
+    eps : constant Float := constantes.eps;
+    mode : constant T_Mode := constantes.mode;
+    prefixe : constant Unbounded_String := constantes.prefixe;
 begin
-    for i in 1..args.V_Count loop
-        args.V_Args(i) := To_Unbounded_String(Argument(i));
-    end loop;
     Put_Line("Testing `IOStream` Package ...");
-    Parse_Args(args, constantes);
-    alpha := constantes.alpha;
-    k := constantes.k;
-    eps := constantes.eps;
-    mode := constantes.mode;
-    prefixe := constantes.prefixe;
     Put("alpha = "); Put(alpha,Exp => 0); New_Line;
     Put("K = "); Put(k,1); New_Line;
     Put("eps = "); Put(eps,Exp => 0); New_Line;
-    Put("mode = "); if IO.mode = Pleine then Put("pleine"); else Put("creuse"); end if; New_Line;
+    Put("mode = "); if mode = Pleine then Put("pleine"); else Put("creuse"); end if; New_Line;
     Put("filename = "); Put(To_String(prefixe)); New_Line;
 end TestIOStream;
