@@ -11,6 +11,10 @@ generic
 
 package IOStream is
     
+    type T_Argument is (
+        Alpha, Creuse, Pleine, K, Epsilon, Prefixe, Autre
+    );
+
     type T_Constantes;
 
     type T_Mode is (
@@ -28,6 +32,16 @@ package IOStream is
 
     -- Exception levé quand les argument ne fonctionne pas
     Bad_Arguments_Exception : Exception;
+
+    -- To_Argument
+    -- retourne l'argument de la chaine de caractère donnée en argument
+    -- Paramètres :
+    --      - Chaine        [in]        La chaine de caratère
+    -- Pre :
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    function To_Argument (Chaine : in Unbounded_String) return T_Argument;
 
 
     -- Parse_Args
@@ -51,7 +65,7 @@ package IOStream is
     --      - Aucune
     function Lire_Nombre_Sommet(File_Name : in Unbounded_String) return Natural;
 
-    -- Parseur
+    -- Parseur_Ligne
     -- Decomposer la ligne "an...a0 bm...b0" en deux entier an...a0 et bm...b0
     -- Paramètres :
     --      - Line      [in]        La ligne qui possède les deux entier séparé par un espace
@@ -61,7 +75,7 @@ package IOStream is
     --      - Aucune
     -- Post :
     --      - Aucune
-    procedure Parseur (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive);
+    procedure Parseur_Ligne (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive);
 
     --procedure parse_file(name : Unbounded_String);
 
@@ -83,6 +97,10 @@ package IOStream is
     --               | 1 1 0 0 0 |
     --               | 1 0 0 0 1 |
     --               ⌊ 0 0 0 1 0 ⌋
+    generic
+        type T_Graphe;
+        with procedure Initialiser (Network : out T_Graphe);
+        with procedure Creer_Arete (Network : in T_Graphe; Depart : in Positive; Arrivee : in Positive);
     procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
 
     type T_Constantes is record
