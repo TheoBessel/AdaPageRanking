@@ -1,22 +1,20 @@
-with Ada.Exceptions;
-with Ada.Text_IO;			use Ada.Text_IO;
-with Ada.Float_Text_IO;		use Ada.Float_Text_IO;
-with Ada.Integer_Text_IO;	use Ada.Integer_Text_IO;
-with Ada.Command_line;		use Ada.Command_line;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with graph;
 
 generic
     type T_Float is digits <>;
+    with function "<" (left : in T_Float; right : in T_Float) return Boolean;
 
 package IOStream is
     
+    -- type discret qui permet de faire 
     type T_Argument is (
         Alpha, Creuse, Pleine, K, Epsilon, Prefixe, Autre
     );
 
     type T_Constantes;
 
+    -- Type énumération qui définie le mode de calcul
     type T_Mode is (
         Pleine,
         Creuse
@@ -98,10 +96,8 @@ package IOStream is
     --               | 1 0 0 0 1 |
     --               ⌊ 0 0 0 1 0 ⌋
     generic
-        type T_Graphe;
-        with procedure Initialiser (Network : out T_Graphe);
-        with procedure Creer_Arete (Network : in T_Graphe; Depart : in Positive; Arrivee : in Positive);
-    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out T_Graphe);
+        with package Graphe is new graph (<>);
+    procedure Lire_Graphe(File_Name : in Unbounded_String; Network : out Graphe.T_Graphe);
 
     type T_Constantes is record
         

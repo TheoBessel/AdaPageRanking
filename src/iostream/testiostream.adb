@@ -8,7 +8,7 @@ with IOStream;
 
 procedure TestIOStream is
     package IO is
-        new IOStream(T_Float => Float);
+        new IOStream(T_Float => Float, "<" => "<");
     use IO;
     
     function Obtenir_argument return T_Content is
@@ -22,7 +22,6 @@ procedure TestIOStream is
 
     -- récupération des Constants
     args : constant T_Args(Argument_Count) := (V_Count => Argument_Count, V_Args => Obtenir_argument);
-    
     constantes : constant T_Constantes := Parse_Args(Args);
     alpha : constant Float := constantes.alpha;
     k : constant Natural := constantes.k;
@@ -31,9 +30,9 @@ procedure TestIOStream is
     prefixe : constant Unbounded_String := constantes.prefixe;
 begin
     Put_Line("Testing `IOStream` Package ...");
-    Put("alpha = "); Put(alpha,Exp => 0); New_Line;
+    Put("Alpha = "); Put(alpha,Exp => 0); New_Line;
     Put("K = "); Put(k,1); New_Line;
-    Put("eps = "); Put(eps,Exp => 0); New_Line;
-    Put("mode = "); if mode = Pleine then Put("pleine"); else Put("creuse"); end if; New_Line;
-    Put("filename = "); Put(To_String(prefixe)); New_Line;
+    Put("Eps = "); Put(eps,Exp => 0); New_Line;
+    Put("Mode = "); if mode = Pleine then Put("pleine"); else Put("creuse"); end if; New_Line;
+    Put("Filename = "); Put(To_String(prefixe)); New_Line;
 end TestIOStream;
