@@ -73,7 +73,7 @@ package IOStream is
     --      - Aucune
     -- Post :
     --      - Aucune
-    procedure Parseur_Ligne (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive);
+    procedure Parseur_Ligne (Line : in Unbounded_String; Depart : out Natural; Arrivee : out Natural);
 
     --procedure parse_file(name : Unbounded_String);
 

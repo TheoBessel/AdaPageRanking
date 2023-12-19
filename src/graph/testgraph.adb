@@ -6,11 +6,11 @@ with Graph;
 procedure TestGraph is
     file_name : constant Unbounded_String := To_Unbounded_String("/Users/theobessel/Documents/N7/Informatique/AdaPageRanking/testgraph.net");
 
-    N : constant Natural := 10;
-
     package IO is
         new IOStream(T_Float => Float, "<" => Standard."<");
     use IO;
+
+    N : Natural := Lire_Nombre_Sommet(file_name);
 
     package MonGraph is
         new Graph(N);

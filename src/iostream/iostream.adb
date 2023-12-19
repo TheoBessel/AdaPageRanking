@@ -225,7 +225,7 @@ package body IOStream is
     end Lire_Nombre_Sommet;
 
 
-    procedure Parseur_Ligne (Line : in Unbounded_String; Depart : out Positive; Arrivee : out Positive) is
+    procedure Parseur_Ligne (Line : in Unbounded_String; Depart : out Natural; Arrivee : out Natural) is
         Caractere : Character;                              -- chaine de caractère lu par le curseur
         long : constant Natural := length(Line);            -- La longueur de la ligne
         I : Natural;                                        -- Itérateur sur la chaine de caractère
@@ -245,8 +245,8 @@ package body IOStream is
     procedure Lire_Graphe (File_Name : in Unbounded_String; Network : out Graphe.T_Graphe) is
         File : File_type;                       -- Variable qui stocke le fichier du graphe 
         line : Unbounded_String;                -- ligne du fichier
-        Depart : Positive;                      -- le numéro du node de départ
-        Arrivee : Positive;                     -- le numéro du node d'arrivée
+        Depart : Natural;                       -- le numéro du node de départ
+        Arrivee : Natural;                      -- le numéro du node d'arrivée
 
         N : constant Natural := Lire_Nombre_Sommet(File_Name);
 
@@ -265,7 +265,7 @@ package body IOStream is
             else
                 null;
             end if;
-            Graphe.Creer_Arete(Network, Depart, Arrivee);
+            Graphe.Creer_Arete(Network, Depart+1, Arrivee+1);
             exit when End_of_file(File);
         end loop;
 
