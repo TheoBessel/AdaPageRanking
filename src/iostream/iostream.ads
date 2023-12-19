@@ -7,6 +7,11 @@ generic
 
 package IOStream is
     
+    -- type discret qui permet de faire 
+    type T_Argument is (
+        Alpha, Creuse, Pleine, K, Epsilon, Prefixe, Autre
+    );
+
     type T_Constantes;
 
     -- Type énumération qui définie le mode de calcul
@@ -25,6 +30,17 @@ package IOStream is
 
     -- Exception levé quand les argument ne fonctionne pas
     Bad_Arguments_Exception : Exception;
+
+    -- To_Argument
+    -- retourne l'argument de la chaine de caractère donnée en argument
+    -- Paramètres :
+    --      - Chaine        [in]        La chaine de caratère
+    -- Pre :
+    --      - Aucune
+    -- Post :
+    --      - Aucune
+    function To_Argument (Chaine : in Unbounded_String) return T_Argument;
+
 
     -- Parse_Args
     -- Traiter les paramètres et définir les constantes

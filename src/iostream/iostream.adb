@@ -18,133 +18,131 @@ package body IOStream is
             if passer_parametre then
                 passer_parametre := False;
             else
-                case args.V_Args(J) is
+                if To_String(args.V_Args(J)) = "-A" then
+                    
+                    if not alpha_non_initialisee then
+                        raise Bad_Arguments_Exception with "Double définition de alpha en argument";
+                    else
+                        null;
+                    end if;
 
-                    when To_Unbounded_String("-A") =>
-                        
-                        if not alpha_non_initialisee then
-                            raise Bad_Arguments_Exception with "Double définition de alpha en argument";
+                    alpha_non_initialisee := False;
+                    passer_parametre := True;
+
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de Alpha donné en argument";
+                    else
+                        null;
+                    end if;
+
+                    begin
+                        Constantes.alpha := T_Float'Value(To_String(args.V_Args(J + 1)));
+                        if Constantes.alpha < 0.0 or 1.0 < Constantes.alpha then
+                            raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas  compris entre 0 et 1";
                         else
                             null;
                         end if;
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas un float";
+                    end;
 
-                        alpha_non_initialisee := False;
-                        passer_parametre := True;
+                elsif To_String(args.V_Args(J)) = "-K" then
+                    -- vérification que K n'a pas déjà était définie
+                    if not k_non_initialisee then
+                        raise Bad_Arguments_Exception  with "Double définition de k en argument";
+                    else
+                        null;
+                    end if;
 
-                        if J+1 > args.V_Count then 
-                            raise Bad_Arguments_Exception with "Aucune valeur de Alpha donné en argument";
-                        else
-                            null;
-                        end if;
-
-                        begin
-                            Constantes.alpha := T_Float'Value(To_String(args.V_Args(J + 1)));
-                            if Constantes.alpha < 0.0 or 1.0 < Constantes.alpha then
-                                raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas  compris entre 0 et 1";
-                            else
-                                null;
-                            end if;
-                        exception
-                            when others =>
-                                raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas un float";
-                        end;
-
-                    when To_Unbounded_String("-K") =>
-                        -- vérification que K n'a pas déjà était définie
-                        if not k_non_initialisee then
-                            raise Bad_Arguments_Exception  with "Double définition de k en argument";
-                        else
-                            null;
-                        end if;
-
-                        k_non_initialisee := False;
-                        passer_parametre := True;
-                        
-                        if J+1 > args.V_Count then 
-                            raise Bad_Arguments_Exception with "Aucune valeur de k donné en argument";
-                        else
-                            null;
-                        end if;
-                        begin
-                            Constantes.k := Natural'Value(To_String(args.V_Args(J + 1)));
-                        exception
-                            when others =>
-                                raise Bad_Arguments_Exception with "L'argument qui suit -K n'est pas un entier Naturel";
-                        end;
+                    k_non_initialisee := False;
+                    passer_parametre := True;
+                    
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de k donné en argument";
+                    else
+                        null;
+                    end if;
+                    begin
+                        Constantes.k := Natural'Value(To_String(args.V_Args(J + 1)));
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -K n'est pas un entier Naturel";
+                    end;
                 
-                    when To_Unbounded_String("-E") =>
-                        -- vérification que eps n'a pas déjà était définie
-                        if not eps_non_initialisee then
-                            raise Bad_Arguments_Exception with "Double définition de eps en argument";
+                elsif To_String(args.V_Args(J)) = "-E" then
+                    -- vérification que eps n'a pas déjà était définie
+                    if not eps_non_initialisee then
+                        raise Bad_Arguments_Exception with "Double définition de eps en argument";
+                    else
+                        null;
+                    end if;
+
+                    eps_non_initialisee := False;
+                    passer_parametre := True;
+
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de eps donné en argument";
+                    else
+                        null;
+                    end if;
+
+                    begin
+                        Constantes.eps := T_Float'Value(To_String(args.V_Args(J + 1)));
+                        if Constantes.eps < 0.0 then
+                            raise Bad_Arguments_Exception with "L'arguement qui suit -E doit être un Float positif";
                         else
                             null;
                         end if;
+                    exception
+                        when others =>
+                            raise Bad_Arguments_Exception with "L'argument qui suit -E n'est pas un Float";
+                    end;
 
-                        eps_non_initialisee := False;
-                        passer_parametre := True;
+                elsif To_String(args.V_Args(J)) = "-P" then
+                    if not mode_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
+                    else
+                        null;
+                    end if;
 
-                        if J+1 > args.V_Count then 
-                            raise Bad_Arguments_Exception with "Aucune valeur de eps donné en argument";
-                        else
-                            null;
-                        end if;
-
-                        begin
-                            Constantes.eps := T_Float'Value(To_String(args.V_Args(J + 1)));
-                            if Constantes.eps < 0.0 then
-                                raise Bad_Arguments_Exception with "L'arguement qui suit -E doit être un Float positif";
-                            else
-                                null;
-                            end if;
-                        exception
-                            when others =>
-                                raise Bad_Arguments_Exception with "L'argument qui suit -E n'est pas un Float";
-                        end;
-
-                    when To_Unbounded_String("-P") =>
-                        if not mode_non_initialisee then
-                            raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
-                        else
-                            null;
-                        end if;
-
-                        mode_non_initialisee := False;
-                        
-                        Constantes.mode := Pleine;
+                    mode_non_initialisee := False;
+                    
+                    Constantes.mode := Pleine;
 
 
-                    when To_Unbounded_String("-C") =>
-                        if not mode_non_initialisee then
-                            raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
-                        else
-                            null;
-                        end if;
+                elsif To_Strong(args.V_Args(J)) = "-C" then
+                    if not mode_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
+                    else
+                        null;
+                    end if;
 
-                        mode_non_initialisee := False;
+                    mode_non_initialisee := False;
 
-                        Constantes.mode := Creuse;
+                    Constantes.mode := Creuse;
 
-                    when To_Unbounded_String("-R") =>
-                        if not prefix_non_initialisee then
-                            raise Bad_Arguments_Exception with "Le préfixe de sortie a déjà été initialisé";
-                        else
-                            null;
-                        end if;
+                elsif To_Strong(args.V_Args(J)) = "-R" then
+                    if not prefix_non_initialisee then
+                        raise Bad_Arguments_Exception with "Le préfixe de sortie a déjà été initialisé";
+                    else
+                        null;
+                    end if;
 
-                        prefix_non_initialisee := False;
-                        passer_parametre := True;
+                    prefix_non_initialisee := False;
+                    passer_parametre := True;
 
-                        if J+1 > args.V_Count then 
-                            raise Bad_Arguments_Exception with "Aucune valeur de prefixe donné en argument";
-                        else
-                            null;
-                        end if;
+                    if J+1 > args.V_Count then 
+                        raise Bad_Arguments_Exception with "Aucune valeur de prefixe donné en argument";
+                    else
+                        null;
+                    end if;
 
-                        Constantes.prefixe := args.V_Args(J + 1);
+                    Constantes.prefixe := args.V_Args(J + 1);
 
-                    when others =>
+                else
                         raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
-                end case;
+                end if;
             end if;
         end loop;
 
