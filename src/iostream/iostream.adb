@@ -5,30 +5,6 @@ with Ada.Text_IO;			use Ada.Text_IO;
 
 package body IOStream is
 
-    function To_Argument (Chaine : in Unbounded_String) return T_Argument is
-        Str : constant String := To_String(Chaine);
-        res : T_Argument;
-    begin
-
-        if Str = "-A" then
-            res := Alpha;
-        elsif Str = "-C" then
-            res := Creuse;
-        elsif Str = "-P" then
-            res := Pleine;
-        elsif Str = "-K" then
-            res := K;
-        elsif Str = "-E" then
-            res := Epsilon;
-        elsif Str = "-R" then
-            res := Prefixe;
-        else
-            res := Autre;
-        end if;
-        return res;
-    end To_Argument;
-
-
     function Parse_Args (args : in T_Args) return T_Constantes is
         constantes : T_Constantes;                  -- record qui stocke les constantes
         alpha_non_initialisee : Boolean := True;    -- si alpha     n'est pas initialisée
@@ -42,9 +18,9 @@ package body IOStream is
             if passer_parametre then
                 passer_parametre := False;
             else
-                case To_Argument(args.V_Args(J)) is
+                case args.V_Args(J) is
 
-                    when Alpha =>
+                    when To_Unbounded_String("-A") =>
                         
                         if not alpha_non_initialisee then
                             raise Bad_Arguments_Exception with "Double définition de alpha en argument";
@@ -73,7 +49,7 @@ package body IOStream is
                                 raise Bad_Arguments_Exception with "L'argument qui suit -A n'est pas un float";
                         end;
 
-                    when K =>
+                    when To_Unbounded_String("-K") =>
                         -- vérification que K n'a pas déjà était définie
                         if not k_non_initialisee then
                             raise Bad_Arguments_Exception  with "Double définition de k en argument";
@@ -96,7 +72,7 @@ package body IOStream is
                                 raise Bad_Arguments_Exception with "L'argument qui suit -K n'est pas un entier Naturel";
                         end;
                 
-                    when Epsilon =>
+                    when To_Unbounded_String("-E") =>
                         -- vérification que eps n'a pas déjà était définie
                         if not eps_non_initialisee then
                             raise Bad_Arguments_Exception with "Double définition de eps en argument";
@@ -125,7 +101,7 @@ package body IOStream is
                                 raise Bad_Arguments_Exception with "L'argument qui suit -E n'est pas un Float";
                         end;
 
-                    when Pleine =>
+                    when To_Unbounded_String("-P") =>
                         if not mode_non_initialisee then
                             raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
                         else
@@ -137,7 +113,7 @@ package body IOStream is
                         Constantes.mode := Pleine;
 
 
-                    when Creuse =>
+                    when To_Unbounded_String("-C") =>
                         if not mode_non_initialisee then
                             raise Bad_Arguments_Exception with "Le mode a été choisi 2 fois";
                         else
@@ -148,7 +124,7 @@ package body IOStream is
 
                         Constantes.mode := Creuse;
 
-                    when Prefixe =>
+                    when To_Unbounded_String("-R") =>
                         if not prefix_non_initialisee then
                             raise Bad_Arguments_Exception with "Le préfixe de sortie a déjà été initialisé";
                         else
