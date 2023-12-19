@@ -28,18 +28,8 @@ package IOStream is
         V_Args : T_Content(1..V_Count);
     end record;
 
-    -- Exception levé quand les argument ne fonctionne pas
+    -- Exception levée quand les argument ne fonctionne pas
     Bad_Arguments_Exception : Exception;
-
-    -- To_Argument
-    -- retourne l'argument de la chaine de caractère donnée en argument
-    -- Paramètres :
-    --      - Chaine        [in]        La chaine de caratère
-    -- Pre :
-    --      - Aucune
-    -- Post :
-    --      - Aucune
-    function To_Argument (Chaine : in Unbounded_String) return T_Argument;
 
 
     -- Parse_Args

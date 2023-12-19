@@ -10,7 +10,7 @@ procedure TestGraph is
         new IOStream(T_Float => Float, "<" => Standard."<");
     use IO;
 
-    N : Natural := Lire_Nombre_Sommet(file_name);
+    N : constant Natural := Lire_Nombre_Sommet(file_name);
 
     package MonGraph is
         new Graph(N);
