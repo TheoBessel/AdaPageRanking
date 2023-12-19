@@ -214,8 +214,12 @@ package body IOStream is
     begin
         open(File, Name => To_string(File_Name), mode => In_File);
 
-        -- lit le nombre de noeuds dans le fichier
-        N := Integer'Value(Get_line(File));
+        begin
+            -- lit le nombre de noeuds dans le fichier
+            N := Integer'Value(Get_line(File));
+        exception
+            when others => raise Bad_Arguments_Exception with "Le fichier ne respecte pas la structure demander";
+        end;
         close(File);
         return N;
     end Lire_Nombre_Sommet;
