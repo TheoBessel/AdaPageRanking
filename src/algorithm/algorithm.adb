@@ -31,7 +31,6 @@ package body Algorithm is
         procedure print_int is new Int_Matrix.forall(process => print_int, breakline => newline);
 
         procedure print_float is new Float_Matrix.forall(process => print_float, breakline => newline);
-
         adj : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
         H : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
         S : Float_Matrix.T_Matrix(V_Height => 6, V_Width => 6);
