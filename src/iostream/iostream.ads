@@ -96,6 +96,7 @@ package IOStream is
         eps : T_Float;
         mode : T_Mode;
         prefixe : Unbounded_String;
+        Nom_Reseau : Unbounded_String;
     end record;
 
 private

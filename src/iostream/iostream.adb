@@ -143,7 +143,11 @@ package body IOStream is
                         Constantes.prefixe := args.V_Args(J + 1);
 
                     when others =>
-                        raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
+                        if J = args.V_Args then
+                            constantes.Nom_Reseau := args.V_Args(J);
+                        else
+                            raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
+                        end if;
                 end case;
             end if;
         end loop;
