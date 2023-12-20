@@ -17,6 +17,10 @@ package body IOStream is
         for J in 1..args.V_Count loop
             if passer_parametre then
                 passer_parametre := False;
+
+            elsif Length(args.V_Args) < 2 then
+                raise Bad_Arguments_Exception with "L'argument n'est pas bien renseigner";
+            
             else
                 case To_String(args.V_Args(J))(2) is
 
@@ -143,7 +147,9 @@ package body IOStream is
                         Constantes.prefixe := args.V_Args(J + 1);
 
                     when others =>
-                        if J = args.V_Args then
+                        if J = args.V_Count then
+                            if '.' in args.V_Args(J) then
+                                raise Bad_Arguments_Exception with "L'argument du nom du réseau ne possède pas d'extension"
                             constantes.Nom_Reseau := args.V_Args(J);
                         else
                             raise Bad_Arguments_Exception with "L'argument " & To_String(args.V_Args(J)) & " n'est pas reconnu par le programme";
