@@ -10,4 +10,5 @@ generic
 package Algorithm is
     function get_H_matrix(graph : P_Graph.T_Graph) return P_Matrix.T_Matrix;
     function get_S_matrix(H : P_Matrix.T_Matrix) return P_Matrix.T_Matrix;
+    function get_G_matrix(S : P_Matrix.T_Matrix; alpha : T_Float) return P_Matrix.T_Matrix;
 end Algorithm;

@@ -38,4 +38,12 @@ package body Algorithm is
         end loop;
         return S;
     end;
+
+    function get_G_matrix(S : P_Matrix.T_Matrix; alpha : T_Float) return P_Matrix.T_Matrix is
+        G : P_Matrix.T_Matrix(S'Range(1),S'Range(2));
+        e : constant P_Matrix.T_Matrix(S'Range(1), 1..1) := P_Matrix.init(S'Length(1),1,1.0);
+    begin
+        G := P_Matrix."+"(P_Matrix."*"(alpha,S),P_Matrix."*"((1.0-alpha)/T_Float(S'Length(1)),P_Matrix."*"(e,P_Matrix.T(e))));
+        return G;
+    end;
 end Algorithm;
