@@ -28,7 +28,8 @@ for i in "$@"; do
         echo "=======================[ Running the executable : ]========================"
         echo ""
         echo "---------------------------------------------------------------------------"
-        sed -E -n -e '/for Main use \(\".*.adb\"\);/p' pagerank.gpr | sed -E -e 's/.*for Main use \(\"/.\/build\//' -e 's/.adb\"\);.*//' | bash
+        #sed -E -n -e '/for Main use \(\".*.adb\"\);/p' pagerank.gpr | sed -E -e 's/.*for Main use \(\"/.\/build\//' -e 's/.adb\"\);.*//' | bash
+        time ./build/pagerank
         echo "---------------------------------------------------------------------------"
         echo ""
         echo "==========================================================================="

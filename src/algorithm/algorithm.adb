@@ -1,6 +1,5 @@
 package body Algorithm is
-    function compute_H_matrix(graph : P_Graph.T_Graph) return P_Matrix.T_Matrix is
-        H : P_Matrix.T_Matrix(graph.mat'Range(1),graph.mat'Range(2));
+    procedure compute_H_matrix(graph : in out P_Graph.T_Graph) is
         sum : T_Float;
     begin
         for i in graph.mat'Range(1) loop
@@ -10,48 +9,43 @@ package body Algorithm is
             end loop;
             for j in graph.mat'Range(2) loop
                 if sum = 0.0 then
-                    P_Matrix.set(H,i,j,0.0);
+                    P_Matrix.set(graph.mat,i,j,0.0);
                 else
-                    P_Matrix.set(H,i,j,T_Float(P_Matrix.get(graph.mat,i,j))/sum);
+                    P_Matrix.set(graph.mat,i,j,T_Float(P_Matrix.get(graph.mat,i,j))/sum);
                 end if;
             end loop;
         end loop;
-        return H;
     end;
 
-    function compute_S_matrix(H : P_Matrix.T_Matrix) return P_Matrix.T_Matrix is
-        S : P_Matrix.T_Matrix(H'Range(1),H'Range(2));
+    procedure compute_S_matrix(graph : in out P_Graph.T_Graph) is
         sum : T_Float;
     begin
-        for i in H'Range(1) loop
+        for i in graph.mat'Range(1) loop
             sum := 0.0;
-            for j in H'Range(2) loop
-                sum := sum + P_Matrix.get(H,i,j);
+            for j in graph.mat'Range(2) loop
+                sum := sum + P_Matrix.get(graph.mat,i,j);
             end loop;
-            for j in H'Range(2) loop
+            for j in graph.mat'Range(2) loop
                 if sum = 0.0 then
-                    P_Matrix.set(S,i,j,1.0/T_Float(H'Length(1)));
+                    P_Matrix.set(graph.mat,i,j,1.0/T_Float(graph.mat'Length(1)));
                 else
-                    P_Matrix.set(S,i,j,P_Matrix.get(H,i,j));
+                    P_Matrix.set(graph.mat,i,j,P_Matrix.get(graph.mat,i,j));
                 end if;
             end loop;
         end loop;
-        return S;
     end;
 
-    function compute_G_matrix(S : P_Matrix.T_Matrix; alpha : T_Float) return P_Matrix.T_Matrix is
-        G : P_Matrix.T_Matrix(S'Range(1),S'Range(2));
-        e : constant P_Matrix.T_Matrix(S'Range(1), 1..1) := P_Matrix.init(S'Length(1),1,1.0);
+    procedure compute_G_matrix(graph : in out P_Graph.T_Graph; alpha : T_Float) is
+        e : constant P_Matrix.T_Matrix(graph.mat'Range(1), 1..1) := P_Matrix.init(graph.mat'Length(1),1,1.0);
     begin
-        G := P_Matrix."+"(P_Matrix."*"(alpha,S),P_Matrix."*"((1.0-alpha)/T_Float(S'Length(1)),P_Matrix."*"(e,P_Matrix.T(e))));
-        return G;
+        graph.mat := P_Matrix."+"(P_Matrix."*"(alpha,graph.mat),P_Matrix."*"((1.0-alpha)/T_Float(graph.mat'Length(1)),P_Matrix."*"(e,P_Matrix.T(e))));
     end;
 
-    function compute_weight_vector(G : P_Matrix.T_Matrix; K : Natural) return P_Matrix.T_Matrix is
-        pi : P_Matrix.T_Matrix(G'Range(1), 1..1) := P_Matrix.init(G'Length(1),1,1.0/T_Float(G'Length(1)));
+    function compute_weight_vector(graph : in P_Graph.T_Graph; K : Natural) return P_Matrix.T_Matrix is
+        pi : P_Matrix.T_Matrix(graph.mat'Range(1), 1..1) := P_Matrix.init(graph.mat'Length(1),1,1.0/T_Float(graph.mat'Length(1)));
     begin
         for i in 1..K loop
-            pi := P_Matrix.T(P_Matrix."*"(P_Matrix.T(pi),G));
+            pi := P_Matrix.T(P_Matrix."*"(P_Matrix.T(pi),graph.mat));
         end loop;
         return pi;
     end;

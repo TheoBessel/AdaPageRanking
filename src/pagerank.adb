@@ -1,4 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Ada.Float_Text_IO; use Ada.Float_Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
@@ -8,6 +9,7 @@ with Graph;
 with Algorithm;
 
 procedure PageRank is
+    type myfloat is digits 2 range 0.0 .. 10000.0;
     package F_Matrix is 
         new Matrix(T_Float => Float, "+" => "+", "*" => "*");
     use F_Matrix;
@@ -20,7 +22,7 @@ procedure PageRank is
 
     procedure print_float(f : Float) is
     begin
-        Put(f, Aft => 14, Exp => 0);
+        Put(f, Aft => 4, Exp => 0);
     end;
     procedure print is new F_Matrix.print(print_float => print_float);
 
@@ -34,21 +36,26 @@ begin
     F_IOStream.parse_args(params);
 
     declare
-        file : F_IOStream.T_File := F_IOStream.parse_file(To_Unbounded_String("/Users/theobessel/Documents/N7/Informatique/AdaPageRankingNUCKED/static/linux26.net"));
-        graph : F_Graph.T_Graph(file.n);
-        H, S, G : T_Matrix(1..file.n,1..file.n);
-        pi : T_Matrix(1..file.n, 1..1);
+        file : constant F_IOStream.T_File := F_IOStream.parse_file(To_Unbounded_String("/Users/theobessel/Documents/N7/Informatique/AdaPageRankingNUCKED/static/linux26.net"));
+        --graph : F_Graph.T_Graph(file.n);
+        --pi : T_Matrix(1..file.n, 1..1);
     begin
-        graph := F_Graph.init(file);
-        H := F_Algorithm.compute_H_matrix(graph);
-        S := F_Algorithm.compute_S_matrix(H);
-        G := F_Algorithm.compute_G_matrix(S, params.alpha);
-        pi := F_Algorithm.compute_weight_vector(G, params.K);
-        print(H);
-        print(S);
-        print(G);
-        print(pi);
-        print(sort(pi));
-        print(pi);
+        --graph := F_Graph.init(file);
+        --F_Algorithm.compute_H_matrix(graph);
+        --F_Algorithm.compute_S_matrix(graph);
+        --F_Algorithm.compute_G_matrix(graph, params.alpha);
+        --pi := F_Algorithm.compute_weight_vector(graph, params.K);
+        --print(H);
+        --print(S);
+        --print(G);
+        --print(pi);
+        --print(sort(pi));
+        --print(pi);
+        for i in  1..file.m loop
+            Put(file.edges(i).start); Put("  "); Put(file.edges(i).stop); New_Line;
+        end loop;
+        Put_Line(Float'Size'Image);
+        Put_Line(Natural'Size'Image);
+        Put(file.m);
     end;
 end PageRank;
