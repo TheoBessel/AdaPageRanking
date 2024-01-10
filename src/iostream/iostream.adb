@@ -46,11 +46,13 @@ package body IOStream is
     function parse_edge(input : String) return T_Edge is
         edge : T_Edge;
         n : constant Natural := input'Length;
+        found : Boolean := False;
     begin
         for i in 1..n loop
-            if input(i) = ' ' then
+            if input(i) = ' ' and not found then
                 edge.start := Natural'Value(input(input'First..i-1));
                 edge.stop := Natural'Value(input(i+1..input'Last));
+                found := True;
             end if;
         end loop;
         return edge;

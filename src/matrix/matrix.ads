@@ -37,6 +37,8 @@ package Matrix is
     -- Transpose une matrice
     function T(mat : in T_Matrix) return T_Matrix with
         Post => T'Result'Length(1) = mat'Length(2) and T'Result'Length(2) = mat'Length(1);
+
+    function sort(input : in out T_Matrix) return T_Matrix;
     
     -- Affiche une matrice
     generic

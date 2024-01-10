@@ -1,5 +1,5 @@
 package body Algorithm is
-    function get_H_matrix(graph : P_Graph.T_Graph) return P_Matrix.T_Matrix is
+    function compute_H_matrix(graph : P_Graph.T_Graph) return P_Matrix.T_Matrix is
         H : P_Matrix.T_Matrix(graph.mat'Range(1),graph.mat'Range(2));
         sum : T_Float;
     begin
@@ -19,7 +19,7 @@ package body Algorithm is
         return H;
     end;
 
-    function get_S_matrix(H : P_Matrix.T_Matrix) return P_Matrix.T_Matrix is
+    function compute_S_matrix(H : P_Matrix.T_Matrix) return P_Matrix.T_Matrix is
         S : P_Matrix.T_Matrix(H'Range(1),H'Range(2));
         sum : T_Float;
     begin
@@ -39,11 +39,20 @@ package body Algorithm is
         return S;
     end;
 
-    function get_G_matrix(S : P_Matrix.T_Matrix; alpha : T_Float) return P_Matrix.T_Matrix is
+    function compute_G_matrix(S : P_Matrix.T_Matrix; alpha : T_Float) return P_Matrix.T_Matrix is
         G : P_Matrix.T_Matrix(S'Range(1),S'Range(2));
         e : constant P_Matrix.T_Matrix(S'Range(1), 1..1) := P_Matrix.init(S'Length(1),1,1.0);
     begin
         G := P_Matrix."+"(P_Matrix."*"(alpha,S),P_Matrix."*"((1.0-alpha)/T_Float(S'Length(1)),P_Matrix."*"(e,P_Matrix.T(e))));
         return G;
+    end;
+
+    function compute_weight_vector(G : P_Matrix.T_Matrix; K : Natural) return P_Matrix.T_Matrix is
+        pi : P_Matrix.T_Matrix(G'Range(1), 1..1) := P_Matrix.init(G'Length(1),1,1.0/T_Float(G'Length(1)));
+    begin
+        for i in 1..K loop
+            pi := P_Matrix.T(P_Matrix."*"(P_Matrix.T(pi),G));
+        end loop;
+        return pi;
     end;
 end Algorithm;
