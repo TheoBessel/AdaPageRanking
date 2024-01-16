@@ -5,7 +5,7 @@ with Matrix;
 
 procedure TestMatrix is
     package F_Matrix is 
-        new Matrix(T_Float => Float, "+" => "+", "*" => "*");
+        new Matrix(T_Float => Float);
     use F_Matrix;
 
     procedure print_float(f : Float) is

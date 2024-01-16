@@ -11,7 +11,7 @@ fi
 
 for i in "$@"; do
     if [[ "$i" == "-test" ]]; then
-        sed -E -i '' -e "s/for Main use \(\".*\"\);/for Main use \(\"testgraph.adb\", \"testiostream.adb\", \"testmatrix.adb\"\);/g" proj.gpr
+        sed -E -i '' -e "s/for Main use \(\".*\"\);/for Main use \(\"testgraph.adb\", \"testiostream.adb\", \"testmatrix.adb\", \"testsparse.adb\"\);/g" proj.gpr
     fi
 done
 
@@ -29,7 +29,7 @@ for i in "$@"; do
         echo ""
         echo "---------------------------------------------------------------------------"
         #sed -E -n -e '/for Main use \(\".*.adb\"\);/p' pagerank.gpr | sed -E -e 's/.*for Main use \(\"/.\/build\//' -e 's/.adb\"\);.*//' | bash
-        time ./build/pagerank
+        time ./build/pagerank -K 150 -P -E 0.0 -A 0.85 -R ./static/worm -C ./static/worm.net
         echo "---------------------------------------------------------------------------"
         echo ""
         echo "==========================================================================="
@@ -43,6 +43,8 @@ for i in "$@"; do
         ./build/testiostream
         echo "---------------------------------------------------------------------------"
         ./build/testmatrix
+        echo "---------------------------------------------------------------------------"
+        ./build/testsparse
         echo "---------------------------------------------------------------------------"
         echo ""
         echo "==========================================================================="

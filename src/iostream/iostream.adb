@@ -73,10 +73,10 @@ package body IOStream is
         return n;
     end;
 
-    function parse_file(file_name : Unbounded_String) return T_File is
+    function parse_file(file_name : Unbounded_String) return T_InFile is
         n : Natural;
         m : constant Natural := count_lines(file_name);
-        output : T_File(m-1);
+        output : T_InFile(m-1);
         file : File_Type;
     begin
         Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
@@ -87,5 +87,27 @@ package body IOStream is
         end loop;
         Close(file);
         return output;
+    end;
+
+    procedure write_file(file_name : Unbounded_String; file : in T_OutFile; params : in T_Arguments) is
+        file_pr, file_prw : File_Type;
+    begin
+        Create(file_pr, name => To_String(file_name) & ".pr", mode => Out_File);
+        Create(file_prw, name => To_String(file_name) & ".prw", mode => Out_File);
+
+        printf_int(file_prw, file.n);
+        Put(file_prw, " ");
+        printf_float(file_prw, params.alpha);
+        Put(file_prw, " ");
+        printf_int(file_prw, params.K);
+        Put_Line(file_prw, "");
+
+        for i in 1..file.n loop
+            printf_int(file_pr, file.pages(i).id); Put_Line(file_pr, "");
+            printf_float(file_prw, file.pages(i).score); Put_Line(file_prw, "");
+        end loop;
+
+        Close(file_pr);
+        Close(file_prw);
     end;
 end IOStream;

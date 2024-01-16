@@ -9,7 +9,7 @@ with Graph;
 
 procedure TestGraph is
     package F_Matrix is 
-        new Matrix(T_Float => Float, "+" => "+", "*" => "*");
+        new Matrix(T_Float => Float);
     use F_Matrix;
     package F_IOStream is
         new IOStream(T_Float => Float);
