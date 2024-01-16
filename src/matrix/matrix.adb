@@ -9,7 +9,7 @@ package body Matrix is
     begin
         mat := (others => (others => val));
         return mat;
-    end;
+    end init;
 
 
     -- Initialise une matrice vide
@@ -17,21 +17,22 @@ package body Matrix is
         mat : T_Matrix(1..height, 1..width);
     begin
         return mat;
-    end;
+    end init;
 
 
     -- Accède à la valeur associée aux indices `i` et `j` dans une matrice
     function get(mat : in T_Matrix; i : in Positive; j : in Positive) return T_Float is
     begin
         return mat(i,j);
-    end;
+    end get;
+
 
 
     -- Modifie la valeur associée aux indices `i` et `j` dans une matrice
     procedure set(mat : out T_Matrix; i : in Positive; j : in Positive; val : in T_Float) is
     begin
         mat(i,j) := val;
-    end;
+    end set;
 
 
     -- Multiplie deux matrices
@@ -49,7 +50,7 @@ package body Matrix is
             end loop;
         end loop;
         return mat;
-    end;
+    end "*";
 
 
     -- Additionne deux matrices
@@ -62,7 +63,7 @@ package body Matrix is
             end loop;
         end loop;
         return mat;
-    end;
+    end "+";
 
     -- Multiplie une matrice par un scalaire à gauche
     function "*"(left : in T_Float; right : in T_Matrix) return T_Matrix is
@@ -74,7 +75,7 @@ package body Matrix is
             end loop;
         end loop;
         return mat;
-    end;
+    end "*";
 
 
     -- Transpose une matrice
@@ -87,7 +88,7 @@ package body Matrix is
             end loop;
         end loop;
         return tmat;
-    end;
+    end T;
 
     function sort(input : in out T_Matrix) return T_Matrix is
         type T_Vector is array(Natural range <>) of T_Float;
@@ -115,7 +116,7 @@ package body Matrix is
         end sum;
 
         -- aux
-        --
+        -- trie le vecteur vec et applique les mêmes modifications au vectueur indices
         -- Paramètre :
         --      - vec       [in out]        Le vecteur que l'on tri
         --      - indices   [in out]        Le vecteur des indices des permutations

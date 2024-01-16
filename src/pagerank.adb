@@ -12,7 +12,7 @@ procedure PageRank is
     -- Création du type de flottant utilisé
     type myfloat is digits 2 range 0.0 .. 10000.0;
 
-    -- instanciation des packages générique
+    -- Instanciation des packages générique
     package F_Matrix is 
         new Matrix(T_Float => Float, "+" => "+", "*" => "*");
     use F_Matrix;

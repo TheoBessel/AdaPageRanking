@@ -4,11 +4,12 @@ with Ada.Float_Text_IO; use Ada.Float_Text_IO;
 with Matrix;
 
 procedure TestMatrix is
+    -- Instanciation des modules
     package F_Matrix is 
         new Matrix(T_Float => Float, "+" => "+", "*" => "*");
     use F_Matrix;
 
-    -- procédure pour afficher un nombre flottant
+    -- Procédure pour afficher un nombre flottant
     procedure print_float(f : in Float) is
     begin
         Put(f, Aft => 1, Exp => 0);
