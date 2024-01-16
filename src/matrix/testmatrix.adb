@@ -8,11 +8,14 @@ procedure TestMatrix is
         new Matrix(T_Float => Float, "+" => "+", "*" => "*");
     use F_Matrix;
 
-    procedure print_float(f : Float) is
+    -- procédure pour afficher un nombre flottant
+    procedure print_float(f : in Float) is
     begin
         Put(f, Aft => 1, Exp => 0);
-    end;
+    end print_float;
+
     procedure print is new F_Matrix.print(print_float => print_float);
+
 begin
     Put_Line("Testing `Matrix` Package ..."); New_Line;
     declare
@@ -27,4 +30,4 @@ begin
         print(mat*T(mat));
         print(T(mat)*mat);
     end;
-end;
+end TestMatrix;

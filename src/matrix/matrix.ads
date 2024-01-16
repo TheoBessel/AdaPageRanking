@@ -1,8 +1,12 @@
+-- spécification du module Matrice Pleine
 generic
     type T_Float is digits <>;
     with function "+" (left : T_Float; right : T_Float) return T_Float is <>;
     with function "*" (left : T_Float; right : T_Float) return T_Float is <>;
+
 package Matrix is
+
+    -- définition du type de matrice pleine
     type T_Matrix is array(Positive range <>, Positive range <>) of T_Float;
 
     -- Initialise une matrice en la remplissant de `val`
@@ -38,10 +42,11 @@ package Matrix is
     function T(mat : in T_Matrix) return T_Matrix with
         Post => T'Result'Length(1) = mat'Length(2) and T'Result'Length(2) = mat'Length(1);
 
+    -- trie les valeurs par ordre décroissant et renvoie le vecteur des permutations
     function sort(input : in out T_Matrix) return T_Matrix;
     
     -- Affiche une matrice
     generic
-        with procedure print_float(f : T_Float) is <>;
+        with procedure print_float(f : in T_Float) is <>;
     procedure print(mat : in T_Matrix);
 end Matrix;

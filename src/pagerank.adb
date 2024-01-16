@@ -9,17 +9,23 @@ with Graph;
 with Algorithm;
 
 procedure PageRank is
+    -- Création du type de flottant utilisé
     type myfloat is digits 2 range 0.0 .. 10000.0;
+
+    -- instanciation des packages générique
     package F_Matrix is 
         new Matrix(T_Float => Float, "+" => "+", "*" => "*");
     use F_Matrix;
+
     package F_IOStream is
         new IOStream(T_Float => Float);
     use F_IOStream;
+
     package F_Graph is
         new Graph(P_Matrix => F_Matrix, P_IOStream => F_IOStream);
     use F_Graph;
 
+    -- Construction de la procédure d'affichage d'une matrice de Flottant
     procedure print_float(f : Float) is
     begin
         Put(f, Aft => 4, Exp => 0);
@@ -29,7 +35,8 @@ procedure PageRank is
     package F_Algorithm is
         new Algorithm(T_Float => Float, P_Matrix => F_Matrix, P_IOStream => F_IOStream, P_Graph => F_Graph);
 
-    params : T_Arguments;
+    params : T_Arguments;       -- Les valeurs des constantes
+
 begin
     Put_Line("Running main program ..."); New_Line;
 
