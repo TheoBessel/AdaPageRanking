@@ -1,11 +1,11 @@
 R0 : Calculer pi_k
 
 R1 : Comment "Calculer pi_k"
-    Traiter les arguments de la ligne de commande et initialiser les constantes
-    Si Creuse Faire                                             -- Creuse : in booleen
-        Calculer pi_k par les matrices creuse
-    Sinon Faire
+    Traiter les arguments de la ligne de commande et initialiser les constantes -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
+    Si pleine Faire                                              -- PLeine : in booleen
         Calculer pi_k par les matrices pleines
+    Sinon Faire
+        Calculer pi_k par les matrices creuse
     Fin Si
     Ecrire le résultat dans prefixe.pr et prefixe.prw
 
@@ -14,7 +14,7 @@ R2 : Comment "Traiter les arguments de la ligne de commande et initialiser les c
     Si Argument_Count = 0 Faire                                 -- Argument_Count : in Entier
         Afficher usage
     Sinon
-        Traiter chaque les options donnés et initialisée les constantes
+        Traiter chaque les options donnés et initialisée les constantes -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
     Fin Si
 
 R3 : Comment "Afficher usage"
@@ -33,18 +33,18 @@ R4 : Comment "Afficher les options"
     Afficher ("     -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
 
 R3 : Comment "Traiter les options donnés et initialisée les constantes"
-    Initialiser les obligation d'initialisation
+    Initialiser les constantes par leur valeur par défaut
     Pour i allant de 1 à Argument_Count Faire                   -- i : in out Entier; Argument_Count : in Entier
-        Traiter l'option
+        Traiter l'option -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
     Fin Pour
     Initialiser les constantes non initialisée
 
-R4 : Comment "Initialiser les obligation d'initialisation"
-    Alpha_Non_Initialise := True                                -- Alpha_Non_Initialise : out Booleen
-    K_Non_Initialise := True                                    -- K_Non_Initialise : out Booleen
-    Epsilon_Non_Initialise := True                              -- Epsilon_Non_Initialise : out Booleen
-    Creuse_Non_Initialise := True                               -- Creuse_Non_Initialise : out Booleen
-    Prefixe_Non_Initialise := True                              -- Prefixe_Non_Initialise : out Booleen
+R4 : Comment "Initialiser les constantes par leur valeur par défaut"
+    alpha: Flottant := 0.85                                 -- alpha : out Booleen
+    k := 150                                                -- k : out Booleen
+    Epsilon := 0                                            -- eps : out Booleen
+    pleine := False                                         -- pleine : out Booleen
+    output := True                                          -- output : out Booleen
 
 R4 : Comment "Traiter l'option"
     Selon Argument(i)                                           -- i : in Entier
