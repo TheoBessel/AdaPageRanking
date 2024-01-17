@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 generic
     type T_Float is digits <>;
 package IOStream is
-    -- Command line arguments
+    -- Arguments de ligne de commande
     type T_Arguments is record
         alpha  : T_Float range 0.0 .. 1.0;
         k      : Natural;
@@ -14,7 +14,7 @@ package IOStream is
         input  : Unbounded_String;
     end record;
 
-    -- File structure
+    -- Structure représentant le fichier en entrée
     type T_Edge is record
         start : Natural;
         stop : Natural;
@@ -25,6 +25,7 @@ package IOStream is
         edges : T_Edges(1..m);
     end record;
 
+    -- Structure représentant les fichiers en sortie
     type T_Page is record
         id : Natural;
         score : T_Float;
@@ -34,13 +35,16 @@ package IOStream is
         pages : T_Pages(1..n);
     end record;
 
-    -- Fuctions
+    -- Parse les arguments de la ligne de commande
     procedure parse_args(args : out T_Arguments);
 
+    -- Parse un sommet sous la forme de deux nombres dans une String
     function parse_edge(input : String) return T_Edge;
 
+    -- Parse le fichier .net en entrée
     function parse_file(file_name : Unbounded_String) return T_InFile;
 
+    -- Écrit les fichiers en sortie
     generic
         with procedure printf_int(t : File_Type; i : Integer) is <>;
         with procedure printf_float(t : File_Type; f : T_Float) is <>;

@@ -1,7 +1,7 @@
 with Text_IO; use Text_IO;
-with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Full is
+    -- Initialise une matrice en la remplissant de `val`
     function init(height: in Positive; width : in Positive; val : in T_Float) return T_Matrix is
         mat : T_Matrix(1..height, 1..width);
     begin
@@ -9,16 +9,19 @@ package body Full is
         return mat;
     end;
 
+    -- Accède à la valeur associée aux indices `i` et `j` dans une matrice
     function get(mat : in T_Matrix; i : in Positive; j : in Positive) return T_Float is
     begin
         return mat(i,j);
     end;
 
+    -- Modifie la valeur associée aux indices `i` et `j` dans une matrice
     procedure set(mat : out T_Matrix; i : in Positive; j : in Positive; val : in T_Float) is
     begin
         mat(i,j) := val;
     end;
 
+    -- Multiplie deux matrices
     function "*"(left : in T_Matrix; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix(left'Range(1),right'Range(2));
         val : T_Float;
@@ -35,6 +38,7 @@ package body Full is
         return mat;
     end;
 
+    -- Additionne deux matrices
     function "+"(left : in T_Matrix; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix(left'Range(1),left'Range(2));
     begin
@@ -46,6 +50,7 @@ package body Full is
         return mat;
     end;
 
+    -- Multiplie une matrice par un scalaire à gauche
     function "*"(left : in T_Float; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix(right'Range(1),right'Range(2));
     begin
@@ -57,6 +62,7 @@ package body Full is
         return mat;
     end;
 
+    -- Transpose une matrice
     function T(mat : in T_Matrix) return T_Matrix is
         tmat : T_Matrix(mat'Range(2),mat'Range(1));
     begin
@@ -68,6 +74,7 @@ package body Full is
         return tmat;
     end;
 
+    -- Trie une matrice
     function sort(input : in out T_Matrix) return T_Matrix is
         type T_Vector is array(Natural range <>) of T_Float;
 
@@ -140,6 +147,7 @@ package body Full is
         return output_indices;
     end;
 
+    -- Affiche une matrice
     procedure print(mat : in T_Matrix) is
     begin
         for i in mat'Range(1) loop
@@ -153,6 +161,7 @@ package body Full is
         New_Line;
     end;
 
+    -- Exporte une matrice vers un fichier de sortie
     function export(ids : in T_Matrix; scores : in T_Matrix) return P_IOStream.T_OutFile is
         file : P_IOStream.T_OutFile(ids'Length(1));
     begin

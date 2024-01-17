@@ -15,8 +15,7 @@ package Full is
     
     -- Modifie la valeur associée aux indices `i` et `j` dans une matrice
     procedure set(mat : out T_Matrix; i : in Positive; j : in Positive; val : in T_Float) with
-        Pre => (i in 1..mat'Length(1)) and (j in 1..mat'Length(2)),
-        Post => get(mat,i,j) = val;
+        Pre => (i in 1..mat'Length(1)) and (j in 1..mat'Length(2));
     
     -- Multiplie deux matrices
     function "*"(left : in T_Matrix; right : in T_Matrix) return T_Matrix with
@@ -44,6 +43,7 @@ package Full is
         with procedure print_float(f : T_Float) is <>;
     procedure print(mat : in T_Matrix);
 
+    -- Exporte une matrice vers un fichier de sortie
     function export(ids : in T_Matrix; scores : in T_Matrix) return P_IOStream.T_OutFile with
         Pre => ids'Length(1) = scores'Length(1);
 end Full;

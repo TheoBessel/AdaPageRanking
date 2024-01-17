@@ -1,16 +1,18 @@
-with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Command_Line; use Ada.Command_Line;
 
 package body IOStream is
+    -- 
     procedure parse_args(args : out T_Arguments) is
         i : Positive := 1;
     begin
-        -- Default parameter values
+        -- Valeurs par défaut
         args.alpha := 0.85;
         args.K := 150;
         args.eps := 0.0;
         args.pleine := False;
         args.output := To_Unbounded_String("output");
+
+        -- On récupère les arguments de la ligne de commande
         while (i <= Argument_Count) loop
             case Argument(i)(2) is
                 when 'A' => begin
@@ -35,7 +37,7 @@ package body IOStream is
                         i := i + 1;
                         args.output := To_Unbounded_String(Argument(i));
                     end;
-                when others => begin -- TODO : Check if i == Argument_Count, else raise exception.
+                when others => begin
                         args.input := To_Unbounded_String(Argument(i));
                     end;
             end case;
@@ -43,6 +45,7 @@ package body IOStream is
         end loop;
     end;
 
+    -- Parse un sommet sous la forme de deux nombres dans une String
     function parse_edge(input : String) return T_Edge is
         edge : T_Edge;
         n : constant Natural := input'Length;
@@ -58,6 +61,7 @@ package body IOStream is
         return edge;
     end;
 
+    -- Compte le nombre d'arêtes du graphe
     function count_lines(file_name : Unbounded_String) return Natural is
         n : Natural;
         file : File_Type;
@@ -73,6 +77,7 @@ package body IOStream is
         return n;
     end;
 
+    -- Parse le fichier .net en entrée
     function parse_file(file_name : Unbounded_String) return T_InFile is
         n : Natural;
         m : constant Natural := count_lines(file_name);
@@ -82,13 +87,14 @@ package body IOStream is
         Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
         n := Integer'Value(Get_Line(file));
         output.n := n;
-        for i in 1..m-1 loop -- m-1 edges because m lines with number of nodes
+        for i in 1..m-1 loop -- m-1 arêtes pour m lignes dans le fichier
             output.edges(i) := parse_edge(Get_Line(file));
         end loop;
         Close(file);
         return output;
     end;
 
+    -- Écrit les fichiers en sortie
     procedure write_file(file_name : Unbounded_String; file : in T_OutFile; params : in T_Arguments) is
         file_pr, file_prw : File_Type;
     begin

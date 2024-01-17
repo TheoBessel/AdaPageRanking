@@ -15,5 +15,9 @@ package Graph is
         end case;
     end record;
 
+    -- Initialise un graphe à partir d'un fichier
     function init(file : P_IOStream.T_InFile; full : Boolean) return T_Graph;
+
+    -- Convertis une matrice creuse en matrice pleine
+    function sparse_to_full(mat : P_Sparse.T_Matrix) return P_Full.T_Matrix;
 end Graph;

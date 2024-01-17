@@ -1,12 +1,14 @@
 with Text_IO; use Text_IO;
 
 package body Sparse is
+    -- Initialise une matrice de taille `height` x `width`
     function init(height : Positive; width : Positive) return T_Matrix is
         mat : T_Matrix(height, width);
     begin
         return mat;
     end;
     
+    -- Accède à la valeur associée aux indices `i` et `j` dans une matrice
     function get(mat : in T_Matrix; i : in Positive; j : in Positive) return T_Float is
         ptr : T_Pointer := new T_Cell;
         val : T_Float := 0.0;
@@ -27,41 +29,47 @@ package body Sparse is
         return val;
     end;
 
+    -- Modifie la valeur associée aux indices `i` et `j` dans une matrice
     procedure set(mat : in out T_Matrix; i : in Positive; j : in Positive; val : in T_Float) is
         elem : constant T_Pointer := new T_Cell;
         row_ptr, col_ptr : T_Pointer;
     begin
-        elem.val := val;
-        elem.i := i;
-        elem.j := j;
-        elem.row := Null;
-        elem.col := Null;
+        if (val /= 0.0) then
+            elem.val := val;
+            elem.i := i;
+            elem.j := j;
+            elem.row := Null;
+            elem.col := Null;
 
-        col_ptr := mat.rows(i);
-        while (col_ptr /= Null and then col_ptr.j < j) loop
-            row_ptr := col_ptr;
-            col_ptr := col_ptr.row;
-        end loop;
-        elem.row := col_ptr;
-        if (col_ptr = mat.rows(i)) then
-            mat.rows(i) := elem;
-        else
-            row_ptr.row := elem;
-        end if;
+            col_ptr := mat.rows(i);
+            while (col_ptr /= Null and then col_ptr.j < j) loop
+                row_ptr := col_ptr;
+                col_ptr := col_ptr.row;
+            end loop;
+            elem.row := col_ptr;
+            if (col_ptr = mat.rows(i)) then
+                mat.rows(i) := elem;
+            else
+                row_ptr.row := elem;
+            end if;
 
-        col_ptr := mat.cols(j);
-        while (col_ptr /= Null and then col_ptr.i < i) loop
-            row_ptr := col_ptr;
-            col_ptr := col_ptr.col;
-        end loop;
-        elem.col := col_ptr;
-        if (col_ptr = mat.cols(j)) then
-            mat.cols(j) := elem;
+            col_ptr := mat.cols(j);
+            while (col_ptr /= Null and then col_ptr.i < i) loop
+                row_ptr := col_ptr;
+                col_ptr := col_ptr.col;
+            end loop;
+            elem.col := col_ptr;
+            if (col_ptr = mat.cols(j)) then
+                mat.cols(j) := elem;
+            else
+                row_ptr.col := elem;
+            end if;
         else
-            row_ptr.col := elem;
+            Null;
         end if;
     end;
 
+    -- Multiplie deux matrices
     function "*"(left : in T_Matrix; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix := init(left.height, right.width);
         val : T_Float := 0.0;
@@ -93,6 +101,7 @@ package body Sparse is
         return mat;
     end;
 
+    -- Additionne deux matrices
     function "+"(left : in T_Matrix; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix := init(left.height, right.width);
         val : T_Float := 0.0;
@@ -133,6 +142,7 @@ package body Sparse is
         return mat;
     end;
 
+    -- Multiplie une matrice par un scalaire à gauche
     function "*"(left : in T_Float; right : in T_Matrix) return T_Matrix is
         mat : T_Matrix := init(right.height, right.width);
         val : T_Float := 0.0;
@@ -164,6 +174,7 @@ package body Sparse is
         return mat;
     end;
 
+    -- Transpose une matrice
     function T(mat : in T_Matrix) return T_Matrix is
         tmat : T_Matrix := init(mat.width, mat.height);
         val : T_Float := 0.0;
@@ -181,6 +192,7 @@ package body Sparse is
         return tmat;
     end;
 
+    -- Affiche une matrice
     procedure print(mat : in T_Matrix) is
         ptr : T_Pointer;
     begin

@@ -11,7 +11,7 @@ fi
 
 for i in "$@"; do
     if [[ "$i" == "-test" ]]; then
-        sed -E -i '' -e "s/for Main use \(\".*\"\);/for Main use \(\"testgraph.adb\", \"testiostream.adb\", \"testmatrix.adb\", \"testsparse.adb\"\);/g" proj.gpr
+        sed -E -i '' -e "s/for Main use \(\".*\"\);/for Main use \(\"testfull.adb\", \"testsparse.adb\"\);/g" proj.gpr
     fi
 done
 
@@ -38,11 +38,7 @@ for i in "$@"; do
         echo "=======================[ Running the executable : ]========================"
         echo ""
         echo "---------------------------------------------------------------------------"
-        ./build/testgraph
-        echo "---------------------------------------------------------------------------"
-        ./build/testiostream
-        echo "---------------------------------------------------------------------------"
-        ./build/testmatrix
+        ./build/testfull
         echo "---------------------------------------------------------------------------"
         ./build/testsparse
         echo "---------------------------------------------------------------------------"

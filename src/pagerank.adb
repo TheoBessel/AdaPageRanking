@@ -9,89 +9,103 @@ with Graph;
 with Algorithm;
 
 procedure PageRank is
+    type T_Real is digits 4;
+
+    -- Importation des différents packages
     package F_IOStream is
-        new IOStream(T_Float => Float);
+        new IOStream(T_Float => T_Real);
     use F_IOStream;
+    
     package F_Full is
-        new Full(T_Float => Float, P_IOStream => F_IOStream);
+        new Full(T_Float => T_Real, P_IOStream => F_IOStream);
     use F_Full;
+    
     package F_Sparse is
-        new Sparse(T_Float => Float, P_IOStream => F_IOStream);
+        new Sparse(T_Float => T_Real, P_IOStream => F_IOStream);
     use F_Sparse;
+
     package F_Graph is
-        new Graph(T_Float => Float, P_Full => F_Full, P_Sparse => F_Sparse, P_IOStream => F_IOStream);
+        new Graph(T_Float => T_Real, P_Full => F_Full, P_Sparse => F_Sparse, P_IOStream => F_IOStream);
     use F_Graph;
 
-    procedure print_float(f : Float) is
+    package F_Algorithm is
+        new Algorithm(T_Float => T_Real, P_IOStream => F_IOStream, P_Full => F_Full, P_Sparse => F_Sparse, P_Graph => F_Graph);
+
+    -- Affichage des valeurs flottantes des matrices
+    procedure printf_float(t : File_Type; f : T_Real) is
     begin
-        Put(f, Aft => 4, Exp => 0);
+        Put(t, Float(f), Aft => 8, Exp => 0, Fore => 1);
     end;
 
-    procedure print_integer(f : Float) is
-    begin
-        Put(Integer(f), 3);
-    end;
-
-    procedure printf_float(t : File_Type; f : Float) is
-    begin
-        Put(t, f, Aft => 8, Exp => 0, Fore => 1);
-    end;
-
+    -- Affichage des valeurs entières des matrices
     procedure printf_integer(t : File_Type; i : Integer) is
     begin
         Put(t, i, 1);
     end;
 
-    procedure full_print is new F_Full.print(print_float => print_float);
-    procedure full_print_int is new F_Full.print(print_float => print_integer);
-
-    procedure sparse_print is new F_Sparse.print(print_float => print_float);
-    procedure sparse_print_int is new F_Sparse.print(print_float => print_integer);
-
+    -- Instantitation de l'écriture de fichiers
     procedure write_file is new  F_IOStream.write_file(printf_int => printf_integer, printf_float => printf_float);
 
-    package F_Algorithm is
-        new Algorithm(T_Float => Float, P_IOStream => F_IOStream, P_Full => F_Full, P_Sparse => F_Sparse, P_Graph => F_Graph);
-
+    -- Paramètres de ligne de commande
     params : T_Arguments;
 begin
     Put_Line("Running main program ..."); New_Line;
 
+    -- Récupération des paramètres de ligne de commande
     F_IOStream.parse_args(params);
 
     declare
+        -- Fichier en entrée
         file : constant F_IOStream.T_InFile := F_IOStream.parse_file(params.input);
+        -- Fichier en sortie
         output : F_IOStream.T_OutFile(file.n);
+        -- Graphe du réseau
         graph : F_Graph.T_Graph(file.n, params.pleine);
     begin
         if params.pleine then
             declare
                 pi, indices : F_Full.T_Matrix(1..file.n, 1..1);
             begin
+                -- Initialisation du graphe
                 graph := F_Graph.init(file, params.pleine);
+
+                -- Calcul de la matrice H
                 F_Algorithm.compute_H_matrix(graph);
+                -- Calcul de la matrice S
                 F_Algorithm.compute_S_matrix(graph);
+                -- Calcul de la matrice G
                 F_Algorithm.compute_G_matrix(graph, params.alpha);
+                -- Calcul du vecteur de poids
                 pi := F_Algorithm.compute_weight_vector_full(graph, params.K);
-                full_print(pi);
+
+                -- Tri du vecteur de poids
                 indices := F_Full.sort(pi);
+
+                -- Exportation des résultats
                 output := F_Full.export(indices,pi);
-                full_print_int(indices);
-                full_print(pi);
                 write_file(params.output, output, params);
             end;
         else
             declare
-                pi, indices : F_Sparse.T_Matrix(file.n, 1);
+                sparse_pi : F_Sparse.T_Matrix := F_Sparse.init(file.n, 1);
+                pi, indices : F_Full.T_Matrix(1..file.n, 1..1);
             begin
+                -- Initialisation du graphe
                 graph := F_Graph.init(file, params.pleine);
+
+                -- Calcul de la matrice H
                 F_Algorithm.compute_H_matrix(graph);
-                pi := F_Algorithm.compute_weight_vector_sparse(graph, params.K);
-                --indices := F_Sparse.sort(pi);
-                --output := F_Sparse.export(indices,pi);
-                --print_int(indices);
-                sparse_print(pi);
-                --write_file(params.output, output, params);
+
+                -- Calcul du vecteur de poids
+                sparse_pi := F_Algorithm.compute_weight_vector_sparse(graph, params.K);
+
+                -- Tri du vecteur de poids
+                pi := F_Graph.sparse_to_full(sparse_pi);
+                indices := F_Full.sort(pi);
+
+                -- Exportation des résultats
+                output := F_Full.export(indices,pi);
+                write_file(params.output, output, params);
             end;
         end if;
     end;
