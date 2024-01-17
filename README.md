@@ -1,6 +1,6 @@
 # Description
 
-Ce projet a été réalisé par Théo Bessel et Benjamin Soyer, deux étudiants en première année à l'N7, dans le département Sciences du Numérique.
+Ce projet a été réalisé par Théo Bessel et Timothé Lebobe, deux étudiants en première année à l'N7, dans le département Sciences du Numérique.
 
 
 # Compilation
@@ -21,7 +21,7 @@ Ce paquet donne une implémentation des graphes orientés utilisés pour le page
 
 ## 2. Paquet `Matrix`
 
-Ce paquet donne une implémentation des matrices utilisées pour le page ranking. Il est basé sur l'utilisation du type primitif `Array` du langage Ada. On utilise un seul `Array` afin d'assurer la contigüité en mémoire des données qui y sont stockées.
+Ce paquet donne une implémentation des matrices utilisées pour le page ranking. Il est basé sur l'utilisation du type primitif `Array` du langage Ada. On utilise un `Array` a deux dimensions.
 
 ## 3. Paquet `IOStream`
 
