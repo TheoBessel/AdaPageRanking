@@ -1,10 +1,12 @@
 with Ada.Command_Line; use Ada.Command_Line;
 
 package body IOStream is
-    -- 
+    -- Exceptions 
+    Mauvais_Argument_Exception : Exception; -- Exception en cas d'erreur de la ligne de commande
+    Mauvaise_Syntaxe_Exception : Exception; -- Exception en cas d'erreur de syntaxe d'un fichier
+    
     procedure parse_args(args : out T_Arguments) is
         i : Positive := 1; -- indice de l'arguement traité
-        Mauvais_Argument_Exception : Exception; -- Exception en cas d'erreur de la ligne de commande
 
     begin
         -- Valeurs par défaut
@@ -67,8 +69,15 @@ package body IOStream is
                 edge.start := Natural'Value(input(input'First..i-1));
                 edge.stop := Natural'Value(input(i+1..input'Last));
                 found := True;
+            else
+                null;
             end if;
         end loop;
+        if not found then
+            raise Mauvaise_Syntaxe_Exception("Une ligne du fichier ne respecte pas la syntaxe.");
+        else
+            null;
+        end if;
         return edge;
     end;
 
@@ -76,7 +85,7 @@ package body IOStream is
     function count_lines(file_name : Unbounded_String) return Natural is
         n : Natural;
         file : File_Type;
-        Mauvaise_Syntaxe_Exception : Exception;
+        
     begin
         n := 0;
         begin
@@ -99,7 +108,7 @@ package body IOStream is
         m : constant Natural := count_lines(file_name); -- Nombre d'arête
         output : T_InFile(m-1); -- résultat de la fonction
         file : File_Type; -- Fichier associé a nom du fichier en entré
-        Mauvaise_Syntaxe_Exception : Exception;
+        
     begin
         begin
             Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
