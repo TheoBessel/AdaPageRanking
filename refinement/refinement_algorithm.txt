@@ -2,27 +2,105 @@ R0 : Calculer pi_k
 
 R1 : Comment "Calculer pi_k"
     Traiter les arguments de la ligne de commande et initialiser les constantes -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
-    Si pleine Faire                                              -- PLeine : in booleen
-        Calculer pi_k par les matrices pleines
+    Si pleine Faire
+        Calculer pi_k par les matrices pleines                  -- alpha : in Flottant; k : in Entier; eps : in Flottant; fichier : in FileType
     Sinon Faire
-        Calculer pi_k par les matrices creuse
+        Calculer pi_k par les matrices creuse                   -- alpha : in Flottant; k : in Entier; eps : in Flottant; fichier : in FileType
     Fin Si
-    Ecrire le résultat dans prefixe.pr et prefixe.prw
+    Trier pi_k                                                  -- pi_k : in Matrice; pi_k_trie : out Matrice; pi_k_indice : out Matrice
+    Ecrire le résultat dans prefixe.pr et prefixe.prw           -- pi_ktrie : in Matrice; pi_k_indice : in Matrice;
 
 
 R2 : Comment "Traiter les arguments de la ligne de commande et initialiser les constantes"
     Si Argument_Count = 0 Faire                                 -- Argument_Count : in Entier
         Afficher usage
     Sinon
-        Traiter chaque les options donnés et initialisée les constantes -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
+        Traiter les options donnés et initialisée les constantes -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
     Fin Si
 
+
+R2 : Comment "Calculer pi_k par les matrices pleines"
+    graph := lecture graphe (fichier)
+    N := graph.Nb_noeud
+    Calculer la matrice G avec l'approche des matrices pleines        -- graph: in out Graphe
+    i := 0
+    pi_k := Matrice.init(N, 1, (1 / N))
+    TantQue pi_k < eps and i <= k
+        pi_k := Multiplier graph.mat par la matrice pi_k
+        i := i + 1;                                   
+    Fin TantQue
+
+
+R2 : Comment "Calculer pi_k par les matrices creuses"
+    i := 0
+    graph := lecture graph (fichier)
+    Calculer H depuis le graphe                                 -- graph : in out Graphe
+    pi_k := Matrice.init(N, 1, (1/N))
+    TantQue pi_k < eps and i <= k
+        pi_k := Multiplier G par la matrice pi_k                -- pi_k : in out Matrice; graph : in Graphe;
+        i := i + 1;
+    FinTantQue
+
+
+R2 : Comment "Trier pi_k"
+    effectuer un quicksort sur prw et appliquée les même transformations à une matrice qui contient les indices des pages -- pi_k : in Matrice; pi_k_indice : in out Matrice; pi_k_trie : in out Matrice;
+
+R2 : Comment "Ecrire le résultat dans prefixe.pr et prefixe.prw"
+    Créer les fichiers prw et pr                                        -- fichier_pr : out Fichier; fichier_prw : out Fichier
+    Ecrire l'entête de prw                                              -- fichier_prw : out Fichier N : in Entier; alpha : in Flottant; K : in Entier
+    Pour i allant de 1 à N Faire
+        EcrireDans(file_pr, pi_k_indice(i, 1)); New_lineDans(file_pr);
+        EcrireDans(file_prw, pi_k_trie(i, 1)); New_lineDans(file_prw);
+    FinPour
+    Fermer les fichiers
+    
 R3 : Comment "Afficher usage"
     Afficher ("Usage : " & Command_Name & " [option] reseau")   -- Command_Name : in String
     Afficher une nouvelle ligne
     Afficher ("    reseau : Le réseau de page étudiée")
     Afficher ("Options : ")
     Afficher les options
+
+R3 : Comment "Traiter les options donnés et initialisée les constantes"
+    Initialiser les constantes par leur valeur par défaut       -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
+    i := 0
+    TantQue i <= Argument_Count Faire                   -- i : in out Entier; Argument_Count : in Entier
+        Traiter l'option                                -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
+        i := i + 1
+    Fin Pour
+
+
+R3 : Comment "Calculer la matrice G avec l'approche des matrices pleines"
+    Calculer H à partir du graphe                               -- graph : out Graphe
+    Calculer S à partir de graphe H                             -- graph : in out Graphe; N : in Entier;
+    Calculer G à partir de la matrice H dans le graphe          -- graph : in out Graphe; alpha : in Flottant; N : in Entier
+
+R3 : Comment "Multiplier G par la matrice pi_k"
+    curseur := graph.mat
+    derniere_ligne := curseur.i - 1
+    Calculer la Valeur_Si_Vide                                  -- Valeur_Si_Vide : out Flottant; N ; in out entier
+    copie_de_pi_k := pi_k
+    TantQue not est_vide(curseur.row) Faire
+        Multiplier le vecteur en fonction de s'il y a des lignes vides -- copie_de_pi_k : in Matrice; pi_k : out Matrice; derniere_ligne : in out Entier
+        derniere_ligne := curseur.i
+        curseur := curseur.row
+    FinTantQue
+
+R3 : Comment "Créer les fichiers prw et pr"
+    Créer(fichier_pr, To_String(prefixe) & ".pr", mode => Out_File)     -- fichier_pr : out Fichier; prefixe : in Unbounded_String
+    Créer(fichier_prw, To_String(prefixe) & ".prw", mode => Out_File)   -- fichier_prw : out Fichier; prefixe : in Unbounded_String
+
+R3 : Comment "Ecrire l'entête de prw"
+    EcrireDans(fichier_prw, N)                                  -- N : in Entier
+    EcrireDans(fichier_prw, " ")
+    EcrireDans(fichier_prw, alpha)                              -- alpha : in Flottant
+    EcrireDans(fichier_prw, " ")
+    EcrireDans(fichier_prw, K)                                  -- k : in Flottant
+    EcrireDans(fichier_prw, "")
+
+R3 : Comment "fermer les fichiers"
+    Fermer (fichier_pr)                                         fichier_pr : in out Fichier; fichier_prw : in out Fichier
+    Fermer (fichier_prw)
 
 R4 : Comment "Afficher les options"
     Afficher ("     -A <valeur> : Définir une valeur de alpha. La valeur doit être un nombre réel compris entre 0 et 1 inclus. La Valeur par défaut est 0.85")
@@ -32,88 +110,133 @@ R4 : Comment "Afficher les options"
     Afficher ("     -C          : Choisir l'algorithme avec des matrices creuses. C'est l'algorithme choisie par défaut")
     Afficher ("     -R <prefixe>: Choisir le préfixe des fichiers résultats, output")
 
-R2 : Comment "Traiter les options donnés et initialisée les constantes"
-    Initialiser les constantes par leur valeur par défaut       -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
-    Pour i allant de 1 à Argument_Count Faire                   -- i : in out Entier; Argument_Count : in Entier
-        Traiter l'option                                        -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
-    Fin Pour
 
 
-R3 : Comment "Initialiser les constantes par leur valeur par défaut"
-    alpha: Flottant := 0.85                                 -- alpha : out Booleen
-    k := 150                                                -- k : out Booleen
-    Epsilon := 0                                            -- eps : out Booleen
-    pleine := False                                         -- pleine : out Booleen
-    output := True                                          -- output : out Booleen
+R4 : Comment "Initialiser les constantes par leur valeur par défaut"
+    alpha: Flottant := 0.85
+    k := 150
+    eps := 0
+    pleine := False
+    output := True
 
-R3 : Comment "Traiter l'option"
-    Selon Argument(i)                                           -- i : in Entier
+R4 : Comment "Traiter l'option"
+    Selon Argument(i)                                           
         Dans "-A" => Modifier la valeur de alpha                -- alpha : out Flottant
         Dans "-K" => Modifier la valeur de K                    -- K : out Entier
-        Dans "-E" => Modifier la valeur de epsilon              -- epsilon : out Flottant
-        Dans "-P" => Creuse := False                            -- Creuse : out Booleen
-        Dans "-C" => Creuse := True                             -- Creuse : out Booleen
-        Dans "-R" => Modifer le prefixe des fichiers résultats  -- prefixe : out String
-        Dans "*.net" => fichier := Argument(i)                  -- fichier : out FileType
-        Dans autres => Rien
+        Dans "-E" => Modifier la valeur de eps                  -- eps : out Flottant
+        Dans "-P" => Pleine := False
+        Dans "-C" => Pleine := True
+        Dans "-R" => Modifer le prefixe des fichiers résultats  -- prefixe : out Unbounded_String
+        Dans "*.net" => fichier : FileType := Argument(i)
+        Dans autres => Levé Exception "Argument inconnue"
     FinSelon
 
-R4 : Comment "Modifier la valeur de alpha"
-    Commencer
-        alpha := Argument(i + 1)                                -- alpha : out Flottant
-    Exception
-        Dans Autres => Afficher usage; Quitter
-    Fin
-
-R4 : Comment "Modifier la valeur de K"
-    Commencer
-        K := Argument(i + 1)                                    -- K : out Entier
-    Exception
-        Dans Autres => Afficher usage; Quitter
-    Fin
-
-R4 : Comment "Modifier la valeur de epsilon"
-    Commencer
-        epsilon := Argument(i + 1)                              -- epsilon : out Flottant
-    Exception
-        Dans Autres => Afficher usage; Quitter
-    Fin
-
-R2 : Comment "Calculer pi_k par les matrices pleines"
-    calculer la matrice G avec l'approche matrice pleine
-    i := 0                                                      -- i : in out Entier
-    pi_k := pi_0                                                -- pi_k : in out Matrice Flottant
-    TantQue pi_k < epsilon and i <= k                           -- epsilon : in Flottant; i : in out Entier; k : in Entier
-        pi_k := Multiplier G par la matrice pi_k                -- G : in Matrice; pi_0 : in Matrice
-        i := i + 1;                                   
-    Fin TantQue
-
-R2 : Comment "Calculer la matrice G par l'approche des matrices pleines"
-    Calculer H à partir du graphe                               -- graph : out Graphe
-    Calculer S à partir de graphe H                             -- graph : in out Graphe
-    Calculer G à partir de la matrice H dans le graphe          -- graph : in out Graphe
-
-
-R3 : Comment "Calculer H à partir du graphe"
-    Pour i allant de 1 à N faire                                -- i : in out Entier; N : in Entier
-        Remplir les colonnes de H
+R4 : Comment "Calculer H à partir du graphe"
+    Pour i allant de 1 à N faire
+        Remplir les colonnes de H                                       -- graph : in out Graphe
     FinPour
+  
+R4 : Comment "Calculer S à partir de H"
+    Pour i allant de 1 à N Faire
+        Regarder si toutes les colonnes sont nuls et les remplir si oui -- graph : in Graphe; N : in Entier
+    Fin Pour
+
+R4 : Comment "Calculer G à partir de S"
+    graph.mat := P_mat."+"(P_mat."*"(alpha,  graph.mat),  P_mat."*"(((1.0 - alpha) / N), P_Mat."*"(e,  T(e))) -- graph : in out Graphe; alpha : in Flottant; e : in Matrice;
+
+R4 : Comment "Calculer la Valeur_Si_Vide"
+    Valeur_Si_Vide := 0
+    Pour i allant de 1 à N Faire
+        Valeur_Si_Vide := Valeur_Si_Vide + get(pi_k, i, 1)
+    FinPour
+    Valeur_Si_Vide := Valeur_Si_Vide / N 
+
+R4 : Comment "Multiplier le vecteur en fonction de s'il y a des lignes vides"
+    Repeter jusqu'à derniere_ligne = curseur - 1
+        derniere_ligne := derniere_ligne + 1
+        pi_k(derniere_ligne) := Valeur_Si_Vide
+    FinRepeter
+    curseur_colonne := curseur
+    sum := 0.0
+    curseur_copie_pi_k := copie_de_pi_k
+    TantQue non est_vide(curseur_colonne) Faire
+        sychroniser le curseur_colonne et le curseur_copie_pi_k -- curseur_colonne : in out Matrice; curseur_copie_pi_k : in out Matrice
+        sum := sum + (alpha * curseur_colonne.Val  + (1 - alpha) *  / N) * curseur_copie_pi_k.Val
+        curseur_colonne := curseur_colonne.row
+        curseur_copie_pi_k := curseur_copie_pi_k.col
+    FinTantQue
+    set(pi_k, curseur.i, 1, sum)                            -- pi_k : out Matrice; curseur : in Matrice; sum : in Flottant
+    Libérer (curseur_copie_pi_k)                            -- curseur_copie_pi_k : in out Matrice
+    Libérer (curseur_colonne)                               -- curseur_colonne : in out Matrice
 
 
-R4 : Comment "Remplir les colonnes de H"
-    Determiner le nombre de sommet que le sommet i pointe       -- sum : in out Entier
+
+R5 : Comment "Modifier la valeur de alpha"
+    Commencer
+        i := i + 1
+        alpha := Argument(i)
+    Exception
+        Dans Autres => Afficher usage; Quitter
+    Fin
+
+R5 : Comment "Modifier la valeur de K"
+    Commencer
+        i := i + 1
+        K := Argument(i)
+    Exception
+        Dans Autres => Afficher usage; Quitter
+    Fin
+
+R5 : Comment "Modifier la valeur de eps"
+    Commencer
+        i := i + 1
+        eps := Argument(i)
+
+    Exception
+        Dans Autres => Afficher usage; Quitter
+    Fin
+
+R5 : Modifier le préfixe des fichiers résultats
+    Si i + 1 = Argument_Count ou else Argument(i + 1)(1) = '-' Faire
+        Leve Exception "Pas de préfixe définit"
+    Sinon
+        prefixe := To_Unbounded_String(Argument(i + 1))
+    FinSi
+
+
+R5 : Comment "Remplir les colonnes de H"
+    Déterminer le nombre de sommet que le sommet i pointe           -- sum : out Entier
     Si sum /= 0 Faire
         remplacer les 1 par 1 / sum                                 -- Graph : in out Graphe; sum in Entier
     Sinon Faire
         rien
     Fin Si
 
-R5 : Comment "Détermniner le nombre de sommet que le sommet i pointe"
+R5 : Comment "Regarder si toutes les colonnes sont nuls et les remplir si oui"
+    Vide := True;
+    j := 1;
+    TantQue Vide et alors j <= N Faire
+        Vide := get(graph, i, j) /= 0;
+        j := j + 1;
+    Fin TantQue
+    Remplir si vide est Vrai                                        -- Vide : in Booleen; graphe : in out Graphe; N : in Entier
+
+R5 : Comment "sychroniser le curseur_colonne et le curseur_copie_pi_k"
+    TantQue curseur_colonne.j < curseur_copie_pi_k.i
+        curseur_colonne := curseur_colonne.row
+    FinTantQue
+    TantQue curseur_colonne.j > curseur_copie_pi_k.i
+        curseur_copie_pi_k := curseur_copie_pi_k.col
+    FinTantQue
+    
+
+R6 : Comment "Déterminer le nombre de sommet que le sommet i pointe"
+    sum := 0
     Pour J allant de 1 à N Faire
-        sum := sum + get(graphe, i, J);                             -- sum : in out sum
+        sum := sum + get(graphe, i, J);
     FinPour
 
-R5 : Comment "remplacer les 1 par 1 / sum"
+R6 : Comment "remplacer les 1 par 1 / sum"
     Pour j allant de 1 à N Faire
         Si get(graph, i, j) = 1 Faire
             set(graph, i, j, 1 / sum);
@@ -122,34 +245,16 @@ R5 : Comment "remplacer les 1 par 1 / sum"
         FinSi
     FinPour
 
-    
-R3 : Comment "Calculer S à partir de H"
-    Pour i allant de 1 à N Faire                                -- i : in out Entier; N : in Entier
-        Regarder si toutes les colonnes sont nuls et les remplir si oui -- graph : in Graphe
-    Fin Pour
 
-R4 : Comment "Regarder si toutes les colonnes sont nuls et les remplir si oui"
-    Vide := True;                                               -- Vide : in out Booleen
-    j := 1;                                                     -- j : out Entier
-    TantQue Vide et alors j <= N Faire                          -- N : in Entier
-        Vide := get(graph, i, j) /= 0;                          -- graph : in out Graphe
-        j := j + 1;                                             -- j : in out Entier
-    Fin TantQue
-    Remplir si vide est Vrai
-
-R5 : Comment "Remplir si vide est Vrai"
-    Si Vide Faire                                               -- Vide : in Booleen
-        Remplir pour chaque colonne par 1/N                     -- graphe : in out Graphe; N : in Entier
+R6 : Comment "Remplir si vide est Vrai"
+    Si Vide Faire
+        Remplir pour chaque colonne par 1/N                         -- graphe : in out Graphe; N : in Entier
     Sinon Faire
         Rien
     Fin Si
 
+
 R6 : Comment "Remplir pour chaque colonne par 1/N"
-    Pour j allant de 1 à N Faire                                    -- j : in out Entier; N : in Entier
-        set(graphe, i, j) := 1 / N;                                 -- graphe : in out : Graphe
+    Pour j allant de 1 à N Faire
+        set(graphe, i, j, 1 / N);                                   -- graphe : in out : Graphe
     Fin Pour
-
-R4 : Comment "Calculer G à partir de S"
-    graph.mat := P_mat."+"(P_mat."*"(alpha,  graph.mat),  P_mat."*"(((1.0 - alpha) / N), P_Mat."*"(e,  T(e))) -- graph : in out Graphe; alpha : in Flottant; e : in Matrice;
-
-R2 : Comment "Calculer pi_k par les matrices creuses"
