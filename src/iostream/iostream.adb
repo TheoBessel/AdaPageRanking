@@ -3,7 +3,9 @@ with Ada.Command_Line; use Ada.Command_Line;
 package body IOStream is
     -- 
     procedure parse_args(args : out T_Arguments) is
-        i : Positive := 1;
+        i : Positive := 1; -- indice de l'arguement traité
+        Mauvais_Argument_Exception : Exception; -- Exception en cas d'erreur de la ligne de commande
+
     begin
         -- Valeurs par défaut
         args.alpha := 0.85;
@@ -18,24 +20,33 @@ package body IOStream is
                 when 'A' => begin
                         i := i + 1;
                         args.alpha := T_Float'Value(Argument(i));
+                    exception when others =>
+                        raise Mauvais_Argument_Exception ("L'argument suivant -A n'est pas un flottant compris entre 0.0 et 1.0");
                     end;
                 when 'K' => begin
                         i := i + 1;
                         args.k := Natural'Value(Argument(i));
+                    exception when others =>
+                        raise Mauvais_Argument_Exception ("L'argument suivant -K n'est pas un entier strictement positif");
                     end;
                 when 'E' => begin
                         i := i + 1;
                         args.eps := T_Float'Value(Argument(i));
+                    exception when others =>
+                        raise Mauvais_Argument_Exception ("L'argument qui suit -E n'est pas un Flottant");
                     end;
-                when 'P' => begin
+                when 'P' => 
                         args.pleine := True;
-                    end;
-                when 'C' => begin
+                when 'C' => 
                         args.pleine := False;
-                    end;
                 when 'R' => begin
                         i := i + 1;
                         args.output := To_Unbounded_String(Argument(i));
+                        if i = Argument_Count then
+                            raise Mauvais_Argument_Exception ("Aucun argument spécifié");
+                        elsif Argument(i)(1) = '-' then
+                            raise Mauvais_Argument_Exception ("L'argument suivant est un autre paramètre");
+                        end if;
                     end;
                 when others => begin
                         args.input := To_Unbounded_String(Argument(i));
@@ -47,7 +58,7 @@ package body IOStream is
 
     -- Parse un sommet sous la forme de deux nombres dans une String
     function parse_edge(input : String) return T_Edge is
-        edge : T_Edge;
+        edge : T_Edge; -- Arête retourné
         n : constant Natural := input'Length;
         found : Boolean := False;
     begin
@@ -65,9 +76,14 @@ package body IOStream is
     function count_lines(file_name : Unbounded_String) return Natural is
         n : Natural;
         file : File_Type;
+        Mauvaise_Syntaxe_Exception : Exception;
     begin
         n := 0;
-        Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
+        begin
+            Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
+        exception when others =>
+            raise Mauvaise_Syntaxe_Exception ("Le fichier n'a pas put être ouvrir.");
+        end;
         while not End_of_file(file) loop
             n := n + 1;
             Skip_Line(file);
@@ -79,12 +95,17 @@ package body IOStream is
 
     -- Parse le fichier .net en entrée
     function parse_file(file_name : Unbounded_String) return T_InFile is
-        n : Natural;
-        m : constant Natural := count_lines(file_name);
-        output : T_InFile(m-1);
-        file : File_Type;
+        n : Natural; -- Nombre de sommet
+        m : constant Natural := count_lines(file_name); -- Nombre d'arête
+        output : T_InFile(m-1); -- résultat de la fonction
+        file : File_Type; -- Fichier associé a nom du fichier en entré
+        Mauvaise_Syntaxe_Exception : Exception;
     begin
-        Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
+        begin
+            Open(file, name => To_String(file_name), mode => In_File, form => "shared=no");
+        exception when others =>
+            raise Mauvaise_Syntaxe_Exception ("Le fichier n'a pas put être ouvrir.");
+        end;
         n := Integer'Value(Get_Line(file));
         output.n := n;
         for i in 1..m-1 loop -- m-1 arêtes pour m lignes dans le fichier

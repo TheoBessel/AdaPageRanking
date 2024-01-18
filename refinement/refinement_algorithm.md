@@ -35,32 +35,32 @@ R4 : Comment "Afficher les options"
 R3 : Comment "Traiter les options donnés et initialisée les constantes"
     Initialiser les constantes par leur valeur par défaut
     Pour i allant de 1 à Argument_Count Faire                   -- i : in out Entier; Argument_Count : in Entier
-        Traiter l'option -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
+        Traiter l'option                                        -- alpha : out Flottant, k : out entier, eps : out flottant, pleine : out Booléan, prefixe : out Unbounded_String, input : out Unbounded_String
     Fin Pour
     Initialiser les constantes non initialisée
 
 R4 : Comment "Initialiser les constantes par leur valeur par défaut"
-    alpha: Flottant := 0.85                                 -- alpha : out Booleen
-    k := 150                                                -- k : out Booleen
-    Epsilon := 0                                            -- eps : out Booleen
-    pleine := False                                         -- pleine : out Booleen
-    output := True                                          -- output : out Booleen
+    alpha: Flottant := 0.85                                     -- alpha    : out Booleen
+    k := 150                                                    -- k        : out Booleen
+    Epsilon := 0                                                -- eps      : out Booleen
+    pleine := False                                             -- pleine   : out Booleen
+    output := True                                              -- output   : out Booleen
 
 R4 : Comment "Traiter l'option"
-    Selon Argument(i)                                           -- i : in Entier
-        Dans "-A" => Modifier la valeur de alpha                -- alpha : out Flottant
-        Dans "-K" => Modifier la valeur de K                    -- K : out Entier
-        Dans "-E" => Modifier la valeur de epsilon              -- epsilon : out Flottant
-        Dans "-P" => Creuse := False                            -- Creuse : out Booleen
-        Dans "-C" => Creuse := True                             -- Creuse : out Booleen
-        Dans "-R" => Modifer le prefixe des fichiers résultats -- prefixe : out String
-        Dans "*.net" => fichier := Argument(i)                  -- fichier : out FileType
+    Selon Argument(i)                                           -- i        : in Entier
+        Dans "-A" => Modifier la valeur de alpha                -- alpha    : out Flottant
+        Dans "-K" => Modifier la valeur de K                    -- K        : out Entier
+        Dans "-E" => Modifier la valeur de epsilon              -- epsilon  : out Flottant
+        Dans "-P" => Pleine := True                             -- Pleine   : out Booleen
+        Dans "-C" => Pleine := False                            -- Pleine   : out Booleen
+        Dans "-R" => Modifer le prefixe des fichiers résultats  -- prefixe  : out String
+        Dans "*.net" => fichier := Argument(i)                  -- fichier  : out FileType
         Dans autres => Rien
     FinSelon
 
 R5 : Comment "Modifier la valeur de alpha"
     Commencer
-        alpha := Argument(i + 1)                                -- alpha : out Flottant
+        alpha := Argument(i + 1)                                -- alpha    : out Flottant
     Exception
         Dans Autres => Afficher usage; Quitter
     Fin
@@ -68,106 +68,43 @@ R5 : Comment "Modifier la valeur de alpha"
 
 R5 : Comment "Modifier la valeur de K"
     Commencer
-        K := Argument(i + 1)                                    -- K : out Entier
+        K := Argument(i + 1)                                    -- K        : out Entier
     Exception
         Dans Autres => Afficher usage; Quitter
     Fin
 
 R5 : Comment "Modifier la valeur de epsilon"
     Commencer
-        epsilon := Argument(i + 1)                              -- epsilon : out Flottant
+        epsilon := Argument(i + 1)                              -- epsilon  : out Flottant
     Exception
         Dans Autres => Afficher usage; Quitter
     Fin
 
-R4 : Comment "Initialiser les constantes non initialisée"
-    Initialiser alpha                                           -- alpha : out Flottant
-    Initialiser K                                               -- K : out Entier
-    Initialiser epsilon                                         -- epsilon : out Flottant
-    Initialiser Creuse                                          -- Creuse : out Flottant
-    Initialiser prefixe                                         -- prefixe : out String
-    initialiser les constantes dépendant du graphe
-
-R5 : Comment "Initialiser alpha"
-    Si Alpha_Non_Initialise Faire                               -- Alpha_Non_Initialise : in Booleen
-        alpha := 0.85;                                          -- alpha : out Flottant
-    Sinon
-        rien;
-    FinSi
-
-R5 : Comment "Initialiser k"
-    Si K_Non_Initialise Faire                                   -- K_Non_Initialise : in Booleen
-        K := 150;                                               -- K : out Entier
-    Sinon
-        rien;
-    FinSi
-
-R5 : Comment "Initialiser epsilon"
-    Si Epsilon_Non_Initialise Faire                             -- Epsilon_Non_Initialise : in Booleen
-        epsilon := 0.0;                                         -- epsilon : out Flottant
-    Sinon
-        rien;
-    FinSi
-
-R5 : Comment "Initialiser Creuse"
-    Si Creuse_Non_Initialise Faire                              -- Creuse_Non_Initialise : in Booleen
-        Creuse := False;                                        -- Creuse : out Booleen
-    Sinon
-        rien;
-    FinSi
-
-R5 : Comment "Initialiser prefixe"
-    Si Prefixe_Non_Initialise Faire                             -- Prefixe_Non_Initialise : in Booleen
-        prefixe := "output";                                    -- prefixe : out String
-    Sinon
-        rien;
-    FinSi
-
-R5 : Comment "Initialiser les constantes dépendant du graphe"
-    Initialiser N                                               -- N : out Entier
- -  Initialiser e comme un vecteur de N colonnes rempli avec 1
- -  Initialiser pi_0 comme un vecteur de N colonnes rempli avec 1/N
-
-R6 : Comment "Initialiser N"
-    N := Ligne 1 de fichier mis en entier                       -- N : out Entier
-
 R2 : Comment "Calculer pi_k par les matrices pleines"
     calculer la matrice G avec l'approche matrice pleine
-    i := 0                                                      -- i : in out Entier
-    pi_k := pi_0                                                -- pi_k : in out Matrice Flottant
+    i := 0                                                      -- i        : in out Entier
+    pi_k := pi_0                                                -- pi_k     : in out Matrice Flottant
     TantQue pi_k < epsilon and i <= k                           -- epsilon : in Flottant; i : in out Entier; k : in Entier
         pi_k := Multiplier G par la matrice pi_k                -- G : in Matrice; pi_0 : in Matrice
-        i := i + 1;                                   
+        i := i + 1;
     Fin TantQue
 
 R2 : Comment "Calculer la matrice G par l'approche des matrices pleines"
-    Transformer la matrice S en la matrice G
+    Initialiser le graphe                                       -- graph : out Graphe
+    Calculer le graphe de la matrice H à partir du graphe       -- graph : in out Graphe
+    Calculer le graphe S à partir du graphe H                   -- graph : in out Graphe
+    Calculer le graphe G à partir du graphe S                   -- graph : in out Graphe
 
-R3 : Comment "Transformer la matrice S en la matrice G"
-    Obtenir la matrice S                                        -- S : in Matrice
-    Appliquer la deuxième transformation de Brin et Page
 
-R4 : Comment "Obtenir la matrice S"
-    Obtenir la matrice H                                        -- H : in Matrice
-    Transformer la matrice H en la matrice S
-
-R5 : Comment "Obtenir la matrice H"
-    Initialiser H                                               -- H : out Matrice
-    Remplir H
- 
-R6 : Comment "Remplir H"
-    Remplir les lignes de H                                     -- H : out Matrice
-
-R7 : Comment "Remplir les lignes de H"
+R3 : Comment "Calculer le graphe de la matrice H à partir du graphe"
     Pour i allant de 1 à N faire                                -- i : in out Entier; N : in Entier
         Remplir les colonnes
     FinPour
 
-
 R8 : Comment "Remplir les colonnes de H"
     Determiner s'il existe au moins un lien sortant de la page Pi vers la page Pj
     Si existe au moins un lien sortant de la page Pi vers la page Pj Faire
-        H(i*N + j) := 1 / |Pi|                                  -- H : out Matrice; P : in Graphe
+        H(i*N + j) := 1 / |Pi|                                  -- H : out Matrice;
     Sinon Faire
         H(i*N + j) := 0
     Fin Si
