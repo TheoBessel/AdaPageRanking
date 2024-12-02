@@ -1,36 +1,33 @@
-# Description
+# AdaPageRanking
 
-Ce projet a été réalisé par Théo Bessel et Timothé Lebobe, deux étudiants en première année à l'N7, dans le département Sciences du Numérique.
+This project aims to implement Google's page ranking algorithm in Ada using both full and sparse matrix approaches.
 
+It was realized by Théo Bessel and Timothé Lebobe, during their first-year at N7 in the Digital Sciences department.
 
-# Compilation
+## Compilation
 
-Pour compiler le projet, veuiller exécuter le script `./build.sh`.
+To compile the project, please run the script `./build.sh`.
 
-En ajoutant l'argument `-run` à ce script, ce dernier exécute directement le code compilé.
+By adding the `-run` argument to this script, it will directly execute the compiled code.
 
-En ajoputant `-test` à ce script, ce dernier exécute les modules de test des différents paquets.
+By adding the `-test` argument to this script, it will execute the test modules for the various packages.
 
-# Architecture du projet
+## Project Architecture
 
-Pour chaque paquet, on trouvera un module de test sous la forme `test_<nom_paquet>.adb`.
+For each package, there is a corresponding test module in the form `test_<package_name>.adb`.
 
-## 1. Paquet `Graph`
+### 1. Package `Graph`
 
-Ce paquet donne une implémentation des graphes orientés utilisés pour le page ranking. La matrice/liste d'adjacence est un type générique qui permet d'implémenter les différents algorithmes en matrice pleine/creuse.
+This package provides an implementation of directed graphs used for page ranking. The adjacency matrix/list is a generic type that allows implementing different algorithms with dense/sparse matrices.
 
-## 2. Paquet `Matrix`
+### 2. Package `Matrix`
 
-Ce paquet donne une implémentation des matrices utilisées pour le page ranking. Il est basé sur l'utilisation du type primitif `Array` du langage Ada. On utilise un `Array` a deux dimensions. Il est divisé en deux paquets `Full` et `Sparse` pour les matrices pleines et creuses.
+This package provides an implementation of matrices used for page ranking. It is based on Ada's primitive `Array` type, using a two-dimensional `Array`. The package is divided into `Full` and `Sparse` sub-packages for dense and sparse matrices, respectively.
 
-## 3. Paquet `IOStream`
+### 3. Package `IOStream`
 
-Ce paquet fournit les différentes fonctions permettant de gérer les paramètres d'entrée du programme ainsi que l'affichage des différentes sorties.
+This package offers various functions for managing the program's input parameters and displaying the different outputs.
 
-## 4. Paquet `Algorithm`
+### 4. Package `Algorithm`
 
-Ce paquet donne une implémentation de l'algorithme de page ranking basé sur les différents paquets détaillés ci-dessus.
-
-# Benckmark du projet
-
-Vous trouverez ci-dessous l'évaluation des performance de ce projet.
+This package provides an implementation of the page ranking algorithm based on the different packages detailed above.
